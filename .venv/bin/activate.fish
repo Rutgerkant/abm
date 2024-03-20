@@ -30,7 +30,11 @@ end
 deactivate nondestructive
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 set -gx VIRTUAL_ENV "/Users/michielvanhouten/Dropbox/Mac/Documents/GitHub/abm/.venv"
+=======
+set -gx VIRTUAL_ENV "/Users/rutgerkant/Documents/GitHub/abm/.venv"
+>>>>>>> 6114454574b66010154ad2fd1682d44572d1c498
 =======
 set -gx VIRTUAL_ENV "/Users/rutgerkant/Documents/GitHub/abm/.venv"
 >>>>>>> 6114454574b66010154ad2fd1682d44572d1c498
