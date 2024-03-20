@@ -1,0 +1,12 @@
+<<<<<<< HEAD
+#!/Users/michielvanhouten/Dropbox/Mac/Documents/GitHub/abm/.venv/bin/python
+=======
+#!/Users/rutgerkant/Documents/GitHub/abm/.venv/bin/python
+>>>>>>> 6114454574b66010154ad2fd1682d44572d1c498
+# -*- coding: utf-8 -*-
+import re
+import sys
+from fontTools.ttx import main
+if __name__ == '__main__':
+    sys.argv[0] = re.sub(r'(-script\.pyw|\.exe)?$', '', sys.argv[0])
+    sys.exit(main())
