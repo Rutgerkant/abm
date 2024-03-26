@@ -30,7 +30,7 @@ def count_laggards(model):
     amount_laggards = sum(1 for a in model.schedule.agents if a.agent_type == TypeAdopter.LAGGARDS)
     return amount_laggards
 
-def available_types(model, width, height):
+def appoint_type(model, width, height):
     total_agents = width * height
     max_innovator = int(total_agents * 0.026)
     max_early_adopter = int(total_agents * 0.166)
@@ -52,6 +52,9 @@ def available_types(model, width, height):
     
     if count_laggards(model) <= max_laggard:
         available_types.append(TypeAdopter.LAGGARDS)
+
+    agent_type = random.choice(available_types)
+    return agent_type
 
 def get_step_number(model):
     return model.schedule.steps
@@ -101,7 +104,7 @@ class SubsidieModel(Model):
         for agent in range(total_agents):
             x = random.randrange(width)
             y = random.randrange(height)
-            agent_type = random.choice(available_types)  
+            agent_type = appoint_type
             agent = MoneyAgent((x, y), self, agent_type)
             self.grid.move_to_empty(agent)
             self.schedule.add(agent)
