@@ -59,24 +59,22 @@ def appoint_type(model, width, height):
 def get_step_number(model):
     return model.schedule.steps
 
-def calculate_belangstelling(model):
-    for a in model.schedule.agents:
-        if a.agent_type == TypeAdopter.INNOVATOR:
-            a.belangstelling = 0.5 + a.leeftijd_auto * 0.05
+def calculate_belangstelling(self):
+        if self.agent_type == TypeAdopter.INNOVATOR:
+            self.belangstelling = 0.5 + self.leeftijd_auto * 0.05
+        elif self.agent_type == TypeAdopter.EARLY_ADOPTER:
+            self.belangstelling = 0.45 + self.leeftijd_auto * 0.5
+        elif self.agent_type == TypeAdopter.EARLY_MAJORITY:
+            self.belangstelling = 0.40 + self.leeftijd_auto * 0.5
+        elif self.agent_type == TypeAdopter.LATE_MAJORITY:
+            self.belangstelling = 0.35 + self.leeftijd_auto * 0.5
+        elif self.agent_type == TypeAdopter.LAGGARDS:
+            self.belangstelling = 0.30  + self.leeftijd_auto * 0.5
 
-        elif a.agent_type == TypeAdopter.EARLY_ADOPTER:
-            a.belangstelling = 0.45 + a.leeftijd_auto * 0.5
-
-        elif a.agent_type == TypeAdopter.EARLY_MAJORITY:
-            a.belangstelling = 0.40 + a.leeftijd_auto * 0.5
-
-        elif a.agent_type == TypeAdopter.LATE_MAJORITY:
-           a.belangstelling = 0.35 + a.leeftijd_auto * 0.5
-
-        elif a.agent_type == TypeAdopter.LAGGARDS:
-            a.belangstelling = 0.30  + a.leeftijd_auto * 0.5
-
-
+def gemiddelde_belangstelling(model):
+    total_belangstelling = sum(a.belangstelling for a in model.schedule.agents)
+    mean_belangstelling = total_belangstelling / len(model.schedule.agents)
+    return mean_belangstelling
 
 
 
@@ -97,32 +95,29 @@ class SubsidieModel(Model):
         self.grid = SingleGrid(width, height, torus = True)
         self.schedule = BaseScheduler(self)
         total_agents = width * height
-        no_car_count = int(total_agents * 0.25)  # 25% have no car
+        kans_bezit_auto = 0.75
 
-        
+        self.width = width
+        self.height = height
 
-        for agent in range(total_agents):
-            x = random.randrange(width)
-            y = random.randrange(height)
-            agent_type = appoint_type
-            agent = MoneyAgent((x, y), self, agent_type)
-            self.grid.move_to_empty(agent)
-            self.schedule.add(agent)
-        
-        for _ in range(no_car_count):
-            x = random.randrange(width)
-            y = random.randrange(height)
-            agent = MoneyAgent((x, y), self, TypeAdopter.NO_CAR)
-            self.grid.move_to_empty(agent)  
-            self.schedule.add(agent)
+        for x in range(self.width):
+            for y in range(self.height):
+                agent_type = appoint_type(self, self.width, self.height)
+
+                if random.random() < kans_bezit_auto:
+                    agent = MoneyAgent((x, y), self, agent_type, True)
+                    self.schedule.add(agent)
+
+    
 
         model_metrics = {
                 "step":get_step_number,
-                "agent_interesse":calculate_belangstelling,
+                "Aantal_Innovators": count_innovators,
+                "gemiddelde_belangstelling": gemiddelde_belangstelling,
             }
         
         agent_metrics = {
-            "interesse": "interesse"
+            "belangstelling": "belangstelling"
             }
 
         self.datacollector = DataCollector(model_reporters=model_metrics,agent_reporters=agent_metrics)
@@ -132,8 +127,10 @@ class SubsidieModel(Model):
 
     def step(self):
         self.schedule.step()
-        calculate_belangstelling(self)
+        for agent in self.schedule.agents:
+            agent.step()  # Roep de step methode van elke agent aan
         self.datacollector.collect(self)
+
 
     def run(self, n):
         """Run the model for n steps."""
@@ -141,14 +138,15 @@ class SubsidieModel(Model):
             self.step()
 
 
-
-
-
+  
+        
 class MoneyAgent(Agent):
     """ An agent with fixed initial wealth."""
-    def __init__(self, pos, model, agent_type):
+    def __init__(self, pos, model, agent_type, bezit_auto):
         super().__init__(pos, model)
-        self.interesse = random.random()
+        self.pos
+        self.belangstelling = 0
+        self.bezit_auto = bezit_auto
         self.bezit_EV = False 
         self.leeftijd_auto = random.randint(0, 10)
         self.vermogen = random.randint(0, 80)
@@ -156,7 +154,7 @@ class MoneyAgent(Agent):
 
     
 
+    def step(self):
+        calculate_belangstelling(self)
         
-        
-
 
