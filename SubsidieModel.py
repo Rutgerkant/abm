@@ -123,8 +123,8 @@ class MoneyAgent(Agent):
         super().__init__(pos, model)
         self.interesse = random.random()
         self.bezit_EV = False 
-        self.leeftijd_auto = random.randint(10)
-        self.vermogen = random.randint(80)
+        self.leeftijd_auto = random.randint(0, 10)
+        self.vermogen = random.randint(0, 80)
         self.agent_type = agent_type
 
     
