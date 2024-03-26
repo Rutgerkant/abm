@@ -10,7 +10,48 @@ import numpy as np
 
 from enum import Enum
 
+def count_innovators(model):
+    amount_innovators = sum(1 for a in model.schedule.agents if a.agent_type == TypeAdopter.INNOVATOR)
+    return amount_innovators
 
+def count_early_adopters(model):
+    amount_early_adopters = sum(1 for a in model.schedule.agents if a.agent_type == TypeAdopter.EARLY_ADOPTER)
+    return amount_early_adopters
+
+def count_early_majority(model):
+    amount_early_majority = sum(1 for a in model.schedule.agents if a.agent_type == TypeAdopter.EARLY_MAJORITY)
+    return amount_early_majority
+
+def count_late_majority(model):
+    amount_late_majority = sum(1 for a in model.schedule.agents if a.agent_type == TypeAdopter.LATE_MAJORITY)
+    return amount_late_majority
+
+def count_laggards(model):
+    amount_laggards = sum(1 for a in model.schedule.agents if a.agent_type == TypeAdopter.LAGGARDS)
+    return amount_laggards
+
+def available_types(model, width, height):
+    total_agents = width * height
+    max_innovator = int(total_agents * 0.026)
+    max_early_adopter = int(total_agents * 0.166)
+    max_early_majority = int(total_agents * 0.34)
+    max_late_majority = int(total_agents * 0.34)
+    max_laggard = int(total_agents * 0.168) 
+    available_types = []
+    if count_innovators(model) <= max_innovator:
+            available_types.append(TypeAdopter.INNOVATOR)
+
+    if count_early_adopters(model) <= max_early_adopter:
+        available_types.append(TypeAdopter.EARLY_ADOPTER)
+    
+    if count_early_majority(model) <= max_early_majority:
+        available_types.append(TypeAdopter.EARLY_MAJORITY)
+
+    if count_late_majority(model) <= max_late_majority:
+        available_types.append(TypeAdopter.LATE_MAJORITY)
+    
+    if count_laggards(model) <= max_laggard:
+        available_types.append(TypeAdopter.LAGGARDS)
 
 def get_step_number(model):
     return model.schedule.steps
@@ -52,43 +93,25 @@ class SubsidieModel(Model):
         super().__init__()
         self.grid = SingleGrid(width, height, torus = True)
         self.schedule = BaseScheduler(self)
-
-        innovator_percentage = 0.026
-        early_adopter_percentage = 0.166
-        early_majority_percentage = 0.34
-        late_majority_percentage = 0.34
-        laggard_percentage = 0.168
-
         total_agents = width * height
-        innovator_count = int(total_agents * innovator_percentage)
-        early_adopter_count = int(total_agents * early_adopter_percentage)
-        early_majority_count = int(total_agents * early_majority_percentage)
-        late_majority_count = int(total_agents * late_majority_percentage)
-        laggard_count = int(total_agents * laggard_percentage)
         no_car_count = int(total_agents * 0.25)  # 25% have no car
 
-        agent_counts = [innovator_count, early_adopter_count, early_majority_count,
-                        late_majority_count, laggard_count]
+        
 
-        agent_type = 0
-        for count in agent_counts:
-            for _ in range(count):
-                x = random.randrange(width)
-                y = random.randrange(height)
-                agent = MoneyAgent((x, y), self, TypeAdopter(agent_type))
-                self.grid.place_agent(agent, (x, y))
-                self.schedule.add(agent)
-            agent_type += 1
-
-        # Add agents with no car
+        for agent in range(total_agents):
+            x = random.randrange(width)
+            y = random.randrange(height)
+            agent_type = random.choice(available_types)  
+            agent = MoneyAgent((x, y), self, agent_type)
+            self.grid.move_to_empty(agent)
+            self.schedule.add(agent)
+        
         for _ in range(no_car_count):
             x = random.randrange(width)
             y = random.randrange(height)
             agent = MoneyAgent((x, y), self, TypeAdopter.NO_CAR)
-            agent = MoneyAgent((x, y), self, TypeAdopter(agent_type))
-            self.grid.move_to_empty(agent)
+            self.grid.move_to_empty(agent)  
             self.schedule.add(agent)
-
 
         model_metrics = {
                 "step":get_step_number,
