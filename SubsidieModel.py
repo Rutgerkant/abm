@@ -11,16 +11,37 @@ import numpy as np
 from enum import Enum
 
 
-def step(self):
-        self.interesse += 0.01
 
 def get_step_number(model):
     return model.schedule.steps
 
-def get_agents_interesse(model):
-    return [round(a.interesse, 2) for a in model.schedule.agents]
+def calculate_belangstelling(model):
+    for a in model.schedule.agents:
+        if a.agent_type == TypeAdopter.INNOVATOR:
+            a.belangstelling = 0.5 + a.leeftijd_auto * 0.05
+
+        elif a.agent_type == TypeAdopter.EARLY_ADOPTER:
+            a.belangstelling = 0.45 + a.leeftijd_auto * 0.5
+
+        elif a.agent_type == TypeAdopter.EARLY_MAJORITY:
+            a.belangstelling = 0.40 + a.leeftijd_auto * 0.5
+
+        elif a.agent_type == TypeAdopter.LATE_MAJORITY:
+           a.belangstelling = 0.35 + a.leeftijd_auto * 0.5
+
+        elif a.agent_type == TypeAdopter.LAGGARDS:
+            a.belangstelling = 0.30  + a.leeftijd_auto * 0.5
 
 
+
+
+
+class TypeAdopter(Enum):
+    INNOVATOR = 0
+    EARLY_ADOPTER = 1
+    EARLY_MAJORITY = 2
+    LATE_MAJORITY = 3
+    LAGGARDS = 4
 
 class SubsidieModel(Model):
     """A model with some numbers of agents"""
@@ -70,7 +91,7 @@ class SubsidieModel(Model):
 
         model_metrics = {
                 "step":get_step_number,
-                "agent_interesse":get_agents_interesse,
+                "agent_interesse":calculate_belangstelling,
             }
         
         agent_metrics = {
@@ -84,6 +105,7 @@ class SubsidieModel(Model):
 
     def step(self):
         self.schedule.step()
+        calculate_belangstelling(self)
         self.datacollector.collect(self)
 
     def run(self, n):
@@ -93,21 +115,20 @@ class SubsidieModel(Model):
 
 
 
-class TypeAdopter(Enum):
-    INNOVATOR = 0
-    EARLY_ADOPTER = 1
-    EARLY_MAJORITY = 2
-    LATE_MAJORITY = 3
-    LAGGARDS = 4
+
 
 class MoneyAgent(Agent):
     """ An agent with fixed initial wealth."""
-    def __init__(self, pos, model):
+    def __init__(self, pos, model, agent_type):
         super().__init__(pos, model)
         self.interesse = random.random()
         self.bezit_EV = False 
         self.leeftijd_auto = random.randint(10)
         self.vermogen = random.randint(80)
+        self.agent_type = agent_type
+
+    
+
         
         
 
