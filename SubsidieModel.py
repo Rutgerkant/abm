@@ -85,7 +85,8 @@ class SubsidieModel(Model):
             x = random.randrange(width)
             y = random.randrange(height)
             agent = MoneyAgent((x, y), self, TypeAdopter.NO_CAR)
-            self.grid.place_agent(agent, (x, y))
+            agent = MoneyAgent((x, y), self, TypeAdopter(agent_type))
+            self.grid.move_to_empty(agent)
             self.schedule.add(agent)
 
 
