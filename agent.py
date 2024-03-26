@@ -1,3 +1,11 @@
 
-import mesa 
-from mesa import agent,model 
+
+import random
+from mesa import agent, model 
+
+
+
+
+
+
+        
