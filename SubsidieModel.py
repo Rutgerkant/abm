@@ -89,7 +89,7 @@ class SubsidieModel(Model):
     """A model with some numbers of agents"""
 
     def __init__(
-        self, width = 50, height = 50 
+        self, width = 50, height = 50, subsidie_start = 5000, subsidie_verandering_per_stap = 20 
     ):
         super().__init__()
         self.grid = SingleGrid(width, height, torus = True)
@@ -99,6 +99,8 @@ class SubsidieModel(Model):
 
         self.width = width
         self.height = height
+        self.subsidie = subsidie_start
+        self.subsidie_verandering_per_stap = subsidie_verandering_per_stap
 
         for x in range(self.width):
             for y in range(self.height):
@@ -126,6 +128,7 @@ class SubsidieModel(Model):
         self.datacollector.collect(self)
 
     def step(self):
+        self.subsidie = max(self.subsidie + self.subsidie_verandering_per_stap, 0)  # Update de subsidie
         self.schedule.step()
         for agent in self.schedule.agents:
             agent.step()  # Roep de step methode van elke agent aan
