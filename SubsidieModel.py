@@ -31,8 +31,7 @@ def count_laggards(model):
     amount_laggards = sum(1 for a in model.schedule.agents if a.agent_type == TypeAdopter.LAGGARDS)
     return amount_laggards
 
-def appoint_type(model, width, height):
-    total_agents = width * height
+def appoint_type(model, total_agents):
     max_innovator = int(total_agents * 0.026)
     max_early_adopter = int(total_agents * 0.166)
     max_early_majority = int(total_agents * 0.34)
@@ -105,11 +104,14 @@ class SubsidieModel(Model):
 
         for x in range(self.width):
             for y in range(self.height):
-                agent_type = appoint_type(self, self.width, self.height)
-
-                if random.random() < kans_bezit_auto:
-                    agent = AdoptionAgent((x, y), self, agent_type, True)
+                agent_type = appoint_type(self, total_agents)
+                if agent_type is not None:
+                    pos = (x, y)
+                    print({x,y}, {agent_type})
+                    agent = AdoptionAgent(self, pos, agent_type)
+                    self.grid.place_agent(agent, pos)
                     self.schedule.add(agent)
+   
 
     
 
@@ -144,28 +146,26 @@ class SubsidieModel(Model):
 
 class AdoptionAgent(Agent):
     """ Een agent met algemene eigenschappen voor innovatie adoptie."""
-    def __init__(self, pos, model, agent_type, belangstelling , subsidie = 0):
-        super().__init__(pos, model)
+    def __init__(self, unique_id, model, pos, agent_type, belangstelling=0, subsidie=0):
+        super().__init__(unique_id, model)  # Hier wordt de __init__-methode van Agent correct aangeroepen
+        self.pos = pos
         self.agent_type = agent_type
-        self.vermogen = random.normalvariate(mu = 50000, sigma=12500)         #normaalverdeling van het inkomen
+        self.subsidie = subsidie 
+        self.vermogen = random.normalvariate(mu=50000, sigma=12500)
         self.belangstelling = belangstelling
         self.heeft_ev_gekocht = False
-        self.leeftijd_auto = random.randint(0, 30)   #waarde van leeftijd auto
-        self.subsidie = subsidie 
+        self.leeftijd_auto = random.randint(0, 30)
 
-    def proberen_EV_te_kopen(self, EV_prijs = 20000, auto_leeftijd_drempel=5):
-        # Check of de agent al een EV heeft gekocht
+        print(self.unique_id, self.pos, self.agent_type)
+
+    def proberen_EV_te_kopen(self, EV_prijs=20000, auto_leeftijd_drempel=5):
         if not self.heeft_ev_gekocht:
             effectief_vermogen = self.vermogen
-            # Als de agent nog geen EV heeft, voeg dan de subsidie toe aan het vermogen
             if self.subsidie > 0:
                 effectief_vermogen += self.subsidie
             if self.leeftijd_auto >= auto_leeftijd_drempel and effectief_vermogen >= EV_prijs and self.belangstelling > 0.4:
-                self.heeft_ev_gekocht = True   
+                self.heeft_ev_gekocht = True
 
-    
     def step(self):
-        # Voorbeeldgedrag: print hun type
-        
         calculate_belangstelling(self)
-        self.proberen_EV_te_kopen
+        self.proberen_EV_te_kopen()
