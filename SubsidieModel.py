@@ -91,7 +91,6 @@ class SubsidieModel(Model):
     def __init__(
         self, width = 50, height = 50, subsidie_start = 5000, subsidie_verandering_per_stap = 20 
     ):
-        super().__init__()
         self.grid = SingleGrid(width, height, torus = True)
         self.schedule = BaseScheduler(self)
         total_agents = width * height
@@ -108,7 +107,7 @@ class SubsidieModel(Model):
                 if agent_type is not None:
                     pos = (x, y)
                     print({x,y}, {agent_type})
-                    agent = AdoptionAgent(self, pos, agent_type)
+                    agent = AdoptionAgent(pos, agent_type)
                     self.grid.place_agent(agent, pos)
                     self.schedule.add(agent)
    
