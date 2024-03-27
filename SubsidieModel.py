@@ -10,6 +10,7 @@ import numpy as np
 
 from enum import Enum
 
+
 def count_innovators(model):
     amount_innovators = sum(1 for a in model.schedule.agents if a.agent_type == TypeAdopter.INNOVATOR)
     return amount_innovators
@@ -107,7 +108,7 @@ class SubsidieModel(Model):
                 agent_type = appoint_type(self, self.width, self.height)
 
                 if random.random() < kans_bezit_auto:
-                    agent = MoneyAgent((x, y), self, agent_type, True)
+                    agent = AdoptionAgent((x, y), self, agent_type, True)
                     self.schedule.add(agent)
 
     
@@ -141,23 +142,56 @@ class SubsidieModel(Model):
             self.step()
 
 
-  
-        
-class MoneyAgent(Agent):
-    """ An agent with fixed initial wealth."""
-    def __init__(self, pos, model, agent_type, bezit_auto):
-        super().__init__(pos, model)
-        self.pos
-        self.belangstelling = 0
-        self.bezit_auto = bezit_auto
-        self.bezit_EV = False 
-        self.leeftijd_auto = random.randint(0, 10)
-        self.vermogen = random.randint(0, 80)
+
+class AdoptionAgent(Agent):
+    """ Een agent met algemene eigenschappen voor innovatie adoptie."""
+    def __init__(self, unique_id, model, agent_type, belangstelling , subsidie = 0):
+        super().__init__(unique_id, model)
         self.agent_type = agent_type
+        self.vermogen = random.normalvariate(mu = 50000, sigma=12500)         #normaalverdeling van het inkomen
+        self.belangstelling = belangstelling
+        self.heeft_ev_gekocht = False
+        self.leeftijd_auto = random.randint(0, 30)   #waarde van leeftijd auto
+        self.subsidie = subsidie 
 
-    
-
+    def proberen_EV_te_kopen(self, EV_prijs = 20000, auto_leeftijd_drempel=5):
+        # Check of de agent al een EV heeft gekocht
+        if not self.heeft_ev_gekocht:
+            effectief_vermogen = self.vermogen
+            # Als de agent nog geen EV heeft, voeg dan de subsidie toe aan het vermogen
+            if self.subsidie > 0:
+                effectief_vermogen += self.subsidie
+            if self.leeftijd_auto >= auto_leeftijd_drempel and int(effectief_vermogen) >= EV_prijs and self.belangstelling > 0.4:
+                self.heeft_ev_gekocht = True   
     def step(self):
+        # Voorbeeldgedrag: print hun type
         calculate_belangstelling(self)
-        
+        self.proberen_EV_te_kopen(self, )
+        print(f"Agent {self.unique_id} van type {self.agent_type} handelt.")
 
+
+class Innovators(AdoptionAgent):
+    def step(self):
+              #toewijzing van vermogen tussen twee bepaalde intervallen
+        print(f"Innovator {self.unique_id} handelt innovatief.")
+
+class EarlyAdopters(AdoptionAgent):
+    def step(self):
+        
+        print(f"Early Adopter {self.unique_id} adopteert vroeg.")
+
+class EarlyMajority(AdoptionAgent):
+    def step(self):
+        
+        print(f"Early Majority {self.unique_id} overweegt zorgvuldig.")
+
+class LateMajority(AdoptionAgent):
+    def step(self):
+        
+        print(f"Late Majority {self.unique_id} is sceptisch maar volgt uiteindelijk.")
+
+class Laggards(AdoptionAgent):
+    def step(self):
+        
+        print(f"Laggard {self.unique_id} is zeer terughoudend met verandering.")
+ 
