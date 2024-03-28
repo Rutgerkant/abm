@@ -65,15 +65,15 @@ def count_type(model, Agent_Type):
 def calculate_belangstelling(model):
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
-                Agent.belangstelling = 0.5 + (Agent.leeftijd_auto/12) * 0.05
+                Agent.belangstelling = 0.4 + (Agent.leeftijd_auto/12) * 0.01
             elif Agent.agent_type == TypeAdopter.EARLY_ADOPTER:
-                Agent.belangstelling = 0.45 + (Agent.leeftijd_auto/12) * 0.05
+                Agent.belangstelling = 0.35 + (Agent.leeftijd_auto/12) * 0.01
             elif Agent.agent_type == TypeAdopter.EARLY_MAJORITY:
-                Agent.belangstelling = 0.40 + (Agent.leeftijd_auto/12) * 0.05
+                Agent.belangstelling = 0.30 + (Agent.leeftijd_auto/12) * 0.01
             elif Agent.agent_type == TypeAdopter.LATE_MAJORITY:
-                Agent.belangstelling = 0.35 + (Agent.leeftijd_auto/12) * 0.05
+                Agent.belangstelling = 0.25 + (Agent.leeftijd_auto/12) * 0.01
             elif Agent.agent_type == TypeAdopter.LAGGARDS:
-                Agent.belangstelling = 0.30  + (Agent.leeftijd_auto/12) * 0.05
+                Agent.belangstelling = 0.20  + (Agent.leeftijd_auto/12) * 0.01
 
 def wil_auto_kopen(model):
     drempel_leeftijd_auto = 60
@@ -84,11 +84,11 @@ def wil_auto_kopen(model):
             
 
         elif a.bezit_EV == False:
-            if a.leeftijf_auto > drempel_leeftijd_auto:
+            if a.leeftijd_auto > drempel_leeftijd_auto:
                 if random.random() < 0.80:
                     koopt_auto(model, a)
                 
-            elif a.TypeAdopter == TypeAdopter.INNOVATOR:
+            elif a.agent_type == TypeAdopter.INNOVATOR:
                 if random.random() < 0.25 and a.vermogen> model.prijs_EV:
                     koopt_EV(a)
 
@@ -149,6 +149,7 @@ class SubsidieModel(Model):
         self.total_agents = self.width * self.height
         self.prijs_EV = 20000
         self.prijs_FBA = 15000
+        self.subsidie = 0
 
         for x in range(self.width):
             for y in range(self.height):
