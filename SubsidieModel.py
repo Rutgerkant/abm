@@ -5,7 +5,6 @@ from mesa.space import SingleGrid
 import mesa.time as time
 import random
 import matplotlib.pyplot as plt
-
 import numpy as np
 
 from enum import Enum
