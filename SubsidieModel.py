@@ -9,6 +9,14 @@ import numpy as np
 
 from enum import Enum
 
+def subsidie_liniear(model):
+    subsidie = 0 
+    tijdstap = model.schedule.step
+    if subsidie < 4000:
+        subsidie = 200* tijdstap
+
+    return subsidie
+
 def gemiddelde_belangstelling(model):
     total_belangstelling = sum(a.belangstelling for a in model.schedule.agents)
     mean_belangstelling = total_belangstelling / len(model.schedule.agents)
@@ -57,20 +65,44 @@ def count_type(model, Agent_Type):
 def calculate_belangstelling(model):
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
-                Agent.belangstelling = 0.5 + (Agent.leeftijd_auto/365) * 0.05
+                Agent.belangstelling = 0.5 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.EARLY_ADOPTER:
-                Agent.belangstelling = 0.45 + (Agent.leeftijd_auto/365) * 0.05
+                Agent.belangstelling = 0.45 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.EARLY_MAJORITY:
-                Agent.belangstelling = 0.40 + (Agent.leeftijd_auto/365) * 0.05
+                Agent.belangstelling = 0.40 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.LATE_MAJORITY:
-                Agent.belangstelling = 0.35 + (Agent.leeftijd_auto/365) * 0.05
+                Agent.belangstelling = 0.35 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.LAGGARDS:
-                Agent.belangstelling = 0.30  + (Agent.leeftijd_auto/365) * 0.05
+                Agent.belangstelling = 0.30  + (Agent.leeftijd_auto/12) * 0.05
 
-def koopt_ev(model):
+def wil_auto_kopen(model):
+    drempel_leeftijd_auto = 60
     for a in model.schedule.agents:
-        if a.belangstelling > 0.7:
-            a.bezit_EV = True
+        if a.bezit_auto == False:
+            if random.random() < 0.2:
+                koopt_auto(model)
+            
+
+        elif a.bezit_EV == False:
+            if a.leeftijf_auto > drempel_leeftijd_auto:
+                if random.random() < 0.80:
+                    koopt_auto()
+                
+            elif a.TypeAdopter == TypeAdopter.INNOVATOR:
+                koopt_EV(model, a)
+
+
+            else:
+                return False
+
+
+def koopt_auto(a):
+    
+    if a.belangstelling > 0.7:
+        koopt_EV(a)
+
+def koopt_EV(agent):
+    agent.bezit_EV = True
 
 def aantal_evs(model):
     count = 0
@@ -132,7 +164,7 @@ class SubsidieModel(Model):
             agent.leeftijd_auto += 1
 
         calculate_belangstelling(self)
-        koopt_ev(self)
+        wil_auto_kopen(self)
 
 
         
@@ -140,15 +172,16 @@ class SubsidieModel(Model):
 
 
 class AdoptionAgent(Agent):
-    def __init__(self, pos, model, agent_type):
+    def __init__(self, pos, model, agent_type, bezit_auto = True):
         super().__init__(pos, model)
         self.agent_type = agent_type
+        self.bezit_auto = bezit_auto
         self.bezit_EV = False
 
         self.vermogen = random.normalvariate(mu=50000, sigma=12500)
         self.belangstelling = 0.0
         self.heeft_ev_gekocht = False
-        self.leeftijd_auto = random.randint(0, 3650)
+        self.leeftijd_auto = random.randint(0, 120)
 
 
 
