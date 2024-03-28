@@ -65,15 +65,15 @@ def count_type(model, Agent_Type):
 def calculate_belangstelling(model):
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
-                Agent.belangstelling = 0.4 + (Agent.leeftijd_auto/12) * 0.01
+                Agent.belangstelling = 0.4 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.EARLY_ADOPTER:
-                Agent.belangstelling = 0.35 + (Agent.leeftijd_auto/12) * 0.01
+                Agent.belangstelling = 0.35 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.EARLY_MAJORITY:
-                Agent.belangstelling = 0.30 + (Agent.leeftijd_auto/12) * 0.01
+                Agent.belangstelling = 0.30 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.LATE_MAJORITY:
-                Agent.belangstelling = 0.25 + (Agent.leeftijd_auto/12) * 0.01
+                Agent.belangstelling = 0.25 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.LAGGARDS:
-                Agent.belangstelling = 0.20  + (Agent.leeftijd_auto/12) * 0.01
+                Agent.belangstelling = 0.20  + (Agent.leeftijd_auto/12) * 0.05
 
 def wil_auto_kopen(model):
     drempel_leeftijd_auto = 60
