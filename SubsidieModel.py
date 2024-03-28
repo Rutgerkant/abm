@@ -86,23 +86,38 @@ def wil_auto_kopen(model):
         elif a.bezit_EV == False:
             if a.leeftijf_auto > drempel_leeftijd_auto:
                 if random.random() < 0.80:
-                    koopt_auto()
+                    koopt_auto(model, a)
                 
             elif a.TypeAdopter == TypeAdopter.INNOVATOR:
-                koopt_EV(model, a)
+                if random.random() < 0.25 and a.vermogen> model.prijs_EV:
+                    koopt_EV(a)
 
 
             else:
                 return False
 
 
-def koopt_auto(a):
+def koopt_auto(model, a):
+    if a.vermogen > model.prijs_EV or (a.vermogen + model.subsidie > model.prijs_EV):
+        if a.belangstelling > 0.7:
+            if random.random() > 0.2: 
+                koopt_EV(a)
+        
+        elif a.belangstelling > 0.6:
+            if random.random() > 0.4: 
+                koopt_EV(a)
+            
+        if a.belangstelling > 0.5:
+            if random.random() > 0.6: 
+                koopt_EV(a)
+        
+    elif a.vermogen > model.prijs_FBA:
+            a.leeftijd_auto = 0
+        
     
-    if a.belangstelling > 0.7:
-        koopt_EV(a)
 
 def koopt_EV(agent):
-    agent.bezit_EV = True
+        agent.bezit_EV = True
 
 def aantal_evs(model):
     count = 0
@@ -132,6 +147,8 @@ class SubsidieModel(Model):
         self.grid = SingleGrid(width, height, torus=False)
 
         self.total_agents = self.width * self.height
+        self.prijs_EV = 20000
+        self.prijs_FBA = 15000
 
         for x in range(self.width):
             for y in range(self.height):
