@@ -78,19 +78,20 @@ def calculate_belangstelling(model):
 def wil_auto_kopen(model):
     drempel_leeftijd_auto = 60
     for a in model.schedule.agents:
-        if a.bezit_auto == False:
-            if random.random() < 0.2:
-                koopt_auto(model, a)
+        if a.bezit_EV == False:
+            if a.bezit_auto == False:
+                if random.random() < 0.2:
+                    koopt_auto(model, a)
             
 
-        elif a.bezit_EV == False:
-            if a.leeftijd_auto > drempel_leeftijd_auto:
-                if random.random() < 0.80:
-                    koopt_auto(model, a)
+            elif a.bezit_EV == False:
+                if a.leeftijd_auto > drempel_leeftijd_auto:
+                    if random.random() < 0.80:
+                        koopt_auto(model, a)
                 
-            elif a.agent_type == TypeAdopter.INNOVATOR:
-                if random.random() < 0.25 and a.vermogen> model.prijs_EV:
-                    koopt_EV(model, a)
+                elif a.agent_type == TypeAdopter.INNOVATOR:
+                    if random.random() < 0.25 and a.vermogen> model.prijs_EV:
+                        koopt_EV(model, a)
 
 
 
