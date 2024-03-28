@@ -80,7 +80,7 @@ def wil_auto_kopen(model):
     for a in model.schedule.agents:
         if a.bezit_auto == False:
             if random.random() < 0.2:
-                koopt_auto(model)
+                koopt_auto(model, a)
             
 
         elif a.bezit_EV == False:
@@ -90,34 +90,37 @@ def wil_auto_kopen(model):
                 
             elif a.agent_type == TypeAdopter.INNOVATOR:
                 if random.random() < 0.25 and a.vermogen> model.prijs_EV:
-                    koopt_EV(a)
+                    koopt_EV(model, a)
 
 
-            else:
-                return False
 
 
 def koopt_auto(model, a):
     if a.vermogen > model.prijs_EV or (a.vermogen + model.subsidie > model.prijs_EV):
         if a.belangstelling > 0.7:
             if random.random() > 0.2: 
-                koopt_EV(a)
+                koopt_EV(model, a)
         
         elif a.belangstelling > 0.6:
             if random.random() > 0.4: 
-                koopt_EV(a)
+                koopt_EV(model, a)
             
         if a.belangstelling > 0.5:
             if random.random() > 0.6: 
-                koopt_EV(a)
+                koopt_EV(model, a)
         
     elif a.vermogen > model.prijs_FBA:
+            a.bezit_auto = True
             a.leeftijd_auto = 0
+            model.gekochte_fba += 1
         
     
 
-def koopt_EV(agent):
+def koopt_EV(model, agent):
+        agent.bezit_auto = True
         agent.bezit_EV = True
+        model.gekochte_evs += 1
+
 
 def aantal_evs(model):
     count = 0
@@ -126,6 +129,20 @@ def aantal_evs(model):
             count +=1
 
     return count
+
+def huishoudens_bezit_auto(model):
+    heeft_wel = 0
+    for a in model.schedule.agents:
+        if a.bezit_auto == True:
+            heeft_wel += 1
+
+    percentage_bezit_auto = heeft_wel/model.total_agents
+    return percentage_bezit_auto
+        
+    
+        
+    
+        
 
 class TypeAdopter(Enum):
     INNOVATOR = 0
@@ -151,10 +168,17 @@ class SubsidieModel(Model):
         self.prijs_FBA = 15000
         self.subsidie = 0
 
+        self.gekochte_evs = 0
+        self.gekochte_fba = 0
+
         for x in range(self.width):
             for y in range(self.height):
                 agent_type = appoint_type(self, self.total_agents)
-                agent = AdoptionAgent((x,y), self, agent_type)
+                heeft_auto = False
+                if random.random() > 0.26:
+                    heeft_auto = True
+
+                agent = AdoptionAgent((x,y), self, agent_type, heeft_auto)
                 self.grid.place_agent(agent, (x, y))
 
                 self.schedule.add(agent)
@@ -162,7 +186,9 @@ class SubsidieModel(Model):
 
         model_metrics = {
              "Gemiddelde belangstelling": gemiddelde_belangstelling,
-             "Aantal gekochte EV": aantal_evs,
+             "Aantal gekochte EV": lambda model: model.gekochte_evs,
+             "Aantal gekochte FBA": lambda model: model.gekochte_fba,
+             "Percentage huishoudens in bezit auto": huishoudens_bezit_auto,
          }
         
         agent_metrics = {
@@ -185,12 +211,12 @@ class SubsidieModel(Model):
         wil_auto_kopen(self)
 
 
-        
+        huishoudens_bezit_auto(self)
         self.datacollector.collect(self)
 
 
 class AdoptionAgent(Agent):
-    def __init__(self, pos, model, agent_type, bezit_auto = True):
+    def __init__(self, pos, model, agent_type, bezit_auto):
         super().__init__(pos, model)
         self.agent_type = agent_type
         self.bezit_auto = bezit_auto
@@ -199,7 +225,11 @@ class AdoptionAgent(Agent):
         self.vermogen = random.normalvariate(mu=50000, sigma=12500)
         self.belangstelling = 0.0
         self.heeft_ev_gekocht = False
-        self.leeftijd_auto = random.randint(0, 120)
+        if self.bezit_auto == True:
+            self.leeftijd_auto = random.randint(0, 120)
+        else:
+            self.leeftijd_auto = 0
+        
 
 
 
