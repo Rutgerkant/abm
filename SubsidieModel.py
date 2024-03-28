@@ -115,7 +115,6 @@ def koopt_EV(model, agent):
         agent.bezit_EV = True
         model.gekochte_evs += 1
 
-
 def aantal_evs(model):
     count = 0
     for a in model.schedule.agents:
