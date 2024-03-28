@@ -86,14 +86,15 @@ def wil_auto_kopen(model):
 
             
             else:
+                
                 if a.leeftijd_auto > drempel_leeftijd_auto:
                     if random.random() < 0.80:
                         koopt_auto(model, a)
                 
-                    elif a.agent_type == TypeAdopter.INNOVATOR:
-                        if random.random() < 0.25 and a.vermogen > model.prijs_EV:
-                            koopt_EV(model, a)
-
+                elif a.agent_type == TypeAdopter.INNOVATOR:
+                    if random.random() < 0.25 and a.vermogen > model.prijs_EV:
+                        koopt_EV(model, a)
+                    
 
 
 
@@ -103,11 +104,11 @@ def koopt_auto(model, a):
             if random.random() > 0.2: 
                 koopt_EV(model, a)
         
-        elif a.belangstelling > 0.6:
+        elif a.belangstelling > 0.6 and a.belangstelling <= 0.7:
             if random.random() > 0.4: 
                 koopt_EV(model, a)
             
-        if a.belangstelling > 0.5:
+        if a.belangstelling > 0.5 and a.belangstelling <= 0.6:
             if random.random() > 0.6: 
                 koopt_EV(model, a)
         
