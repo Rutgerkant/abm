@@ -84,14 +84,15 @@ def wil_auto_kopen(model):
                     koopt_auto(model, a)
             
 
-            elif a.bezit_EV == False:
+            
+            else:
                 if a.leeftijd_auto > drempel_leeftijd_auto:
                     if random.random() < 0.80:
                         koopt_auto(model, a)
                 
-                elif a.agent_type == TypeAdopter.INNOVATOR:
-                    if random.random() < 0.25 and a.vermogen> model.prijs_EV:
-                        koopt_EV(model, a)
+                    elif a.agent_type == TypeAdopter.INNOVATOR:
+                        if random.random() < 0.25 and a.vermogen > model.prijs_EV:
+                            koopt_EV(model, a)
 
 
 
@@ -225,7 +226,6 @@ class AdoptionAgent(Agent):
 
         self.vermogen = random.normalvariate(mu=50000, sigma=12500)
         self.belangstelling = 0.0
-        self.heeft_ev_gekocht = False
         if self.bezit_auto == True:
             self.leeftijd_auto = random.randint(0, 120)
         else:
