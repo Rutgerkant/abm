@@ -81,22 +81,15 @@ def wil_auto_kopen(model):
         if a.bezit_EV == False:
             if a.bezit_auto == False:
                 if random.random() < 0.2:
-                    koopt_auto(model, a)
-            
-
-            
+                    koopt_auto(model, a)        
             else:
-                
                 if a.leeftijd_auto > drempel_leeftijd_auto:
                     if random.random() < 0.80:
                         koopt_auto(model, a)
                 
                 elif a.agent_type == TypeAdopter.INNOVATOR:
                     if random.random() < 0.25 and a.vermogen > model.prijs_EV:
-                        koopt_EV(model, a)
-                    
-
-
+                        koopt_EV(model, a)                    
 
 def koopt_auto(model, a):
     if a.vermogen > model.prijs_EV or (a.vermogen + model.subsidie > model.prijs_EV):
@@ -117,8 +110,6 @@ def koopt_auto(model, a):
             a.leeftijd_auto = 0
             model.gekochte_fba += 1
         
-    
-
 def koopt_EV(model, agent):
         agent.bezit_auto = True
         agent.bezit_EV = True
@@ -141,11 +132,6 @@ def huishoudens_bezit_auto(model):
 
     percentage_bezit_auto = heeft_wel/model.total_agents
     return percentage_bezit_auto
-        
-    
-        
-    
-        
 
 class TypeAdopter(Enum):
     INNOVATOR = 0
@@ -153,8 +139,6 @@ class TypeAdopter(Enum):
     EARLY_MAJORITY = 2
     LATE_MAJORITY = 3
     LAGGARDS = 4
-
-
 
 class SubsidieModel(Model):
     def __init__(self, width = 50, height =50 ):
