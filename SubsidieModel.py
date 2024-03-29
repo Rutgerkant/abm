@@ -9,6 +9,18 @@ import numpy as np
 
 from enum import Enum
 
+
+def percentage_evs(model):
+    total_cars = 0
+    total_evs = 0
+    for a in model.schedule.agents:
+        if a.bezit_auto == True:
+            total_cars +=1 
+            if a.bezit_EV == True:
+                total_evs += 1
+    percentage = total_evs / total_cars
+    return percentage
+
 def subsidie_liniear(model):
     subsidie = 0 
     tijdstap = model.schedule.step
@@ -175,6 +187,7 @@ class SubsidieModel(Model):
              "Aantal gekochte EV": lambda model: model.gekochte_evs,
              "Aantal gekochte FBA": lambda model: model.gekochte_fba,
              "Percentage huishoudens in bezit auto": huishoudens_bezit_auto,
+             "Percerntage EV's van Auto's": percentage_evs
          }
         
         agent_metrics = {
@@ -198,6 +211,7 @@ class SubsidieModel(Model):
 
 
         huishoudens_bezit_auto(self)
+        percentage_evs(self)
         self.datacollector.collect(self)
 
 
