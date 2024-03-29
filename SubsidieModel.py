@@ -150,8 +150,8 @@ class SubsidieModel(Model):
         self.grid = SingleGrid(width, height, torus=False)
 
         self.total_agents = self.width * self.height
-        self.prijs_EV = 20000
-        self.prijs_FBA = 15000
+        self.prijs_EV = 40000
+        self.prijs_FBA = 33000
         self.subsidie = 0
 
         self.gekochte_evs = 0
