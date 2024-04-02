@@ -7,8 +7,6 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 
-import math 
-
 from enum import Enum
 
 
@@ -23,12 +21,11 @@ def percentage_evs(model):
     percentage = total_evs / total_cars
     return percentage
 
-def subsidie_log(model):
-    x = model.schedule.step
-    return 3966.687 * math.exp(-0.076 * (x/12))
-
-    
-
+def subsidie_liniear(model):
+    subsidie = 0 
+    tijdstap = model.schedule.step
+    if subsidie < 4000:
+        subsidie = 200* tijdstap
 
     return subsidie
 
@@ -78,18 +75,17 @@ def count_type(model, Agent_Type):
         return count
 
 def calculate_belangstelling(model):
-        subsidie = subsidie_log
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
-                Agent.belangstelling = 0.4 + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 3.2
+                Agent.belangstelling = 0.4 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.EARLY_ADOPTER:
-                Agent.belangstelling = 0.35 + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 3
+                Agent.belangstelling = 0.35 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.EARLY_MAJORITY:
-                Agent.belangstelling = 0.30 + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 2.8
+                Agent.belangstelling = 0.30 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.LATE_MAJORITY:
-                Agent.belangstelling = 0.25 + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 2.3
+                Agent.belangstelling = 0.25 + (Agent.leeftijd_auto/12) * 0.05
             elif Agent.agent_type == TypeAdopter.LAGGARDS:
-                Agent.belangstelling = 0.20  + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 1.7
+                Agent.belangstelling = 0.20  + (Agent.leeftijd_auto/12) * 0.05
 
 def wil_auto_kopen(model):
     drempel_leeftijd_auto = 60
@@ -155,7 +151,7 @@ class TypeAdopter(Enum):
     LATE_MAJORITY = 3
     LAGGARDS = 4
 
-class SubsidieModel(Model):
+class SubsidieModel2(Model):
     def __init__(self, width = 50, height =50 ):
         super().__init__()
         self.width = width
