@@ -103,7 +103,7 @@ def calculate_belangstelling(model):
             if Agent.agent_type == TypeAdopter.INNOVATOR:
                 Agent.belangstelling = 0.4  + (subsidie/1000)* 3.2
             elif Agent.agent_type == TypeAdopter.EARLY_ADOPTER:
-                Agent.belangstelling = 0.35  * (0.087/12) + (subsidie_/1000)* 3
+                Agent.belangstelling = 0.35  * (0.087/12) + (subsidie/1000)* 3
             elif Agent.agent_type == TypeAdopter.EARLY_MAJORITY:
                 Agent.belangstelling = 0.30  + (subsidie/1000)* 2.8
             elif Agent.agent_type == TypeAdopter.LATE_MAJORITY:
