@@ -189,6 +189,7 @@ class SubsidieModel(Model):
 
         self.gekochte_evs = 0
         self.gekochte_fba = 0
+        reset_subsidiepot()
 
         for x in range(self.width):
             for y in range(self.height):

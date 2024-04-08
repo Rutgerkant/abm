@@ -1,6 +1,7 @@
 subsidiepot = {}
 
 def reset_subsidiepot():
+    print("Hij wordt aangeroepen")
     global subsidiepot
     subsidiepot = {
         0: 10000000,
@@ -15,6 +16,7 @@ def reset_subsidiepot():
         0: 58000000
         }
     
+    print("Hij is gereset")
     
 
 def Tracking_Subs(subsidie, maand):
