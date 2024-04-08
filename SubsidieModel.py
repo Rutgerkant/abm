@@ -167,7 +167,7 @@ class TypeAdopter(Enum):
     LAGGARDS = 4
 
 class SubsidieModel(Model):
-    def __init__(self, width = 50, height =50 ):
+    def __init__(self, width = 88, height =88 ):
         super().__init__()
         self.width = width
         self.height = height
