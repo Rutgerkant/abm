@@ -23,21 +23,25 @@ def Tracking_Subs(subsidie, maand):
     count_subs = 0
     jaar = maand // 12
 
-    if jaar in subsidiepot:
-        print("Volle pot")
-        beschikbaar_bedrag = subsidiepot[jaar]
-        if beschikbaar_bedrag >= subsidie:
-            subsidiepot[jaar] -= subsidie
-            count_subs += 1
-            return True
+    if maand % 12 == 0:
+        if jaar in subsidiepot:
+            print("Volle pot")
+            beschikbaar_bedrag = subsidiepot[jaar]
+            if beschikbaar_bedrag >= subsidie:
+                subsidiepot[jaar] -= subsidie
+                count_subs += 1
+                return True
         
-        else:
-            print("Potje is op")
-            return False
+            else:
+                print("Potje is op")
+                print(jaar)
+                return False
     
 
+        else:
+            return False
     else:
-         return False 
+        return False
 
 
 
