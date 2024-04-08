@@ -67,7 +67,6 @@ def appoint_vermogen_inkomen():
     (a, b) = genereer_random_vermogen()
     return (a,b)
 
-
 def percentage_evs(model):
     total_cars = 0
     total_evs = 0
@@ -89,8 +88,6 @@ def gemiddelde_belangstelling(model):
     mean_belangstelling = total_belangstelling / len(model.schedule.agents)
     return mean_belangstelling
 
-
-
 def count_type(model, Agent_Type):
 
         count = 0 
@@ -104,15 +101,15 @@ def calculate_belangstelling(model):
         subsidie = subsidie_log
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
-                Agent.belangstelling = 0.4 + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 3.2
+                Agent.belangstelling = 0.4  + (subsidie_log/1000)* 3.2
             elif Agent.agent_type == TypeAdopter.EARLY_ADOPTER:
-                Agent.belangstelling = 0.35 + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 3
+                Agent.belangstelling = 0.35  * (0.087/12) + (subsidie_log/1000)* 3
             elif Agent.agent_type == TypeAdopter.EARLY_MAJORITY:
-                Agent.belangstelling = 0.30 + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 2.8
+                Agent.belangstelling = 0.30  + (subsidie_log/1000)* 2.8
             elif Agent.agent_type == TypeAdopter.LATE_MAJORITY:
-                Agent.belangstelling = 0.25 + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 2.3
+                Agent.belangstelling = 0.25 + (subsidie_log/1000)* 2.3
             elif Agent.agent_type == TypeAdopter.LAGGARDS:
-                Agent.belangstelling = 0.20  + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 1.7
+                Agent.belangstelling = 0.20 + (subsidie_log/1000)* 1.7
 
 def wil_auto_kopen(model):
     drempel_leeftijd_auto = 60
