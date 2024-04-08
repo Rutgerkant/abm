@@ -49,7 +49,7 @@ def appoint_leeftijd_auto():
     leeftijd_auto = 0
     kans = random.random()
     if kans <= 0.156:
-        leeftijd_auto = random.randint(36)
+        leeftijd_auto = random.randint(0, 36)
     elif kans > 0.156 <= 0.342:
         leeftijd_auto = random.randint(36, 72)
     elif kans > 0.342 <= 0.495:
@@ -245,13 +245,14 @@ class SubsidieModel(Model):
 
 
 class AdoptionAgent(Agent):
-    def __init__(self, pos, model, agent_type, bezit_auto, leeftijd_auto):
+    def __init__(self, pos, model, agent_type, bezit_auto, leeftijd_auto, vermogen, inkomen):
         super().__init__(pos, model)
         self.agent_type = agent_type
         self.bezit_auto = bezit_auto
         self.bezit_EV = False
 
-        self.vermogen = random.normalvariate(mu=50000, sigma=12500)
+        self.vermogen = vermogen
+        self.inkomen = inkomen
         self.belangstelling = 0.0
         self.bezit_auto = bezit_auto
         if self.bezit_auto == True:
