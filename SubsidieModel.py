@@ -6,7 +6,7 @@ import mesa.time as time
 import random
 import matplotlib.pyplot as plt
 import numpy as np
-
+from aantalSubs import reset_subsidiepot, Tracking_Subs
 import math 
 from enum import Enum
 
@@ -104,7 +104,7 @@ def calculate_belangstelling(model):
             if Agent.agent_type == TypeAdopter.INNOVATOR:
                 Agent.belangstelling = 0.75  + (subsidie/1000)* 0.032
             elif Agent.agent_type == TypeAdopter.EARLY_ADOPTER:
-                Agent.belangstelling = 0.716  * (0.087/12) + (subsidie/1000)* 0.03
+                Agent.belangstelling = 0.716  + (subsidie/1000)* 0.03
             elif Agent.agent_type == TypeAdopter.EARLY_MAJORITY:
                 Agent.belangstelling = 0.524  + (subsidie/1000)* 0.028
             elif Agent.agent_type == TypeAdopter.LATE_MAJORITY:
@@ -113,8 +113,10 @@ def calculate_belangstelling(model):
                 Agent.belangstelling = 0.374 + (subsidie/1000)* 0.017
 
 def wil_auto_kopen(model):
+    drempelwaarde = 48
+
     for a in model.schedule.agents:
-        if a.bezit_EV == False:
+        if a.bezit_EV == False and a.leeftijd_auto > drempelwaarde:
             if a.bezit_auto == False:
                 if random.random() < 0.296:
                     koopt_auto(model, a)        
@@ -167,7 +169,7 @@ class TypeAdopter(Enum):
     LAGGARDS = 4
 
 class SubsidieModel(Model):
-    def __init__(self, width = 88, height =88 ):
+    def __init__(self, width = 50, height = 50 ):
         super().__init__()
         self.width = width
         self.height = height

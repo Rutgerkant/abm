@@ -55,5 +55,5 @@ def genereer_random_vermogen():
 
 
 random_vermogen, random_inkomen = genereer_random_vermogen()
-
+print(random_vermogen)
 
