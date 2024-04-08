@@ -13,7 +13,7 @@ def reset_subsidiepot():
         6: 58000000,
         7: 58000000,
         8: 58000000,
-        0: 58000000
+        10: 58000000
         }
     
     print("Hij is gereset")
@@ -24,6 +24,7 @@ def Tracking_Subs(subsidie, maand):
     jaar = maand // 12
 
     if jaar in subsidiepot:
+        print("Volle pot")
         beschikbaar_bedrag = subsidiepot[jaar]
         if beschikbaar_bedrag >= subsidie:
             subsidiepot[jaar] -= subsidie
@@ -31,6 +32,7 @@ def Tracking_Subs(subsidie, maand):
             return True
         
         else:
+            print("Potje is op")
             return False
     
 

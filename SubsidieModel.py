@@ -88,6 +88,19 @@ def gemiddelde_belangstelling(model):
     mean_belangstelling = total_belangstelling / len(model.schedule.agents)
     return mean_belangstelling
 
+def gemiddelde_leeftijd_auto(model):
+    som = 0
+    aantal = 0
+    for a in model.schedule.agents:
+        if a.bezit_auto == True:
+            som += a.leeftijd_auto
+            aantal += 1
+
+    gem = som /aantal
+    return gem 
+
+
+
 def count_type(model, Agent_Type):
 
         count = 0 
@@ -102,7 +115,7 @@ def calculate_belangstelling(model):
         subsidie = float(subsidie)
         maand = model.schedule.steps
         subsidiepot_vol = Tracking_Subs(subsidie, maand)
-        if subsidie == False:
+        if subsidiepot_vol == False:
             subsidie = 0
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
@@ -117,15 +130,11 @@ def calculate_belangstelling(model):
                 Agent.belangstelling = 0.374 + (subsidie/1000)* 0.017
 
 def wil_auto_kopen(model):
-    drempelwaarde = 48
-
+    drempelwaarde = 72
     for a in model.schedule.agents:
-        if a.bezit_EV == False and a.leeftijd_auto > drempelwaarde:
-            if a.bezit_auto == False:
-                if random.random() < 0.296:
-                    koopt_auto(model, a)        
-            else:
-                kans = a.leeftijd_auto * 0.087
+        if a.bezit_EV == False:
+            if a.bezit_auto == True and a.leeftijd_auto > drempelwaarde:
+                kans = a.leeftijd_auto // 12 * 0.087
                 if random.random() < kans:
                     koopt_auto(model, a)            
 
@@ -173,7 +182,7 @@ class TypeAdopter(Enum):
     LAGGARDS = 4
 
 class SubsidieModel(Model):
-    def __init__(self, width = 50, height = 50 ):
+    def __init__(self, width = 50, height = 50):
         super().__init__()
         self.width = width
         self.height = height
@@ -220,7 +229,8 @@ class SubsidieModel(Model):
         agent_metrics = {
             "Type Agent": lambda agent: agent.agent_type.name,
             "Belangstelling": lambda agent: agent.belangstelling,
-            "leeftijd auto": lambda agent: agent.leeftijd_auto
+            "leeftijd auto": lambda agent: agent.leeftijd_auto,
+            "Vermogen Agent": lambda agent:agent.vermogen
         }
 
         self.datacollector = DataCollector(model_reporters=model_metrics,agent_reporters=agent_metrics)
@@ -232,6 +242,7 @@ class SubsidieModel(Model):
         self.schedule.step()
         for agent in self.schedule.agents:
             agent.leeftijd_auto += 1
+            agent.vermogen += agent.inkomen
 
         calculate_belangstelling(self)
         wil_auto_kopen(self)
