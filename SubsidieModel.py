@@ -8,49 +8,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 import math 
-
 from enum import Enum
 
-def appoint_leeftijd_auto(model):
-    # cijfers van de kans zijn gehaald van https://www.cbs.nl/nl-nl/nieuws/2016/20/personenauto-s-steeds-ouder
-    # leeftijd is in maanden
-    leeftijd_auto = 0
-    kans = random.random()
-    if kans <= 0.156:
-        leeftijd_auto = random.randint(36)
-    elif kans > 0.156 <= 0.342:
-        leeftijd_auto = random.randint(36, 72)
-    elif kans > 0.342 <= 0.495:
-        leeftijd_auto = random.randint(72, 108)
-    elif kans > 0.495 <= 0.656:
-        leeftijd_auto = random.randint(108, 144)
-    elif kans > 0.656 <= 0.797:
-        leeftijd_auto = random.randint(144, 225)
-    elif kans > 0.797:
-        leeftijd_auto = random.randint(225, 360)
-    
-    return leeftijd_auto
-
-def percentage_evs(model):
-    total_cars = 0
-    total_evs = 0
-    for a in model.schedule.agents:
-        if a.bezit_auto == True:
-            total_cars +=1 
-            if a.bezit_EV == True:
-                total_evs += 1
-    percentage = total_evs / total_cars
-    return percentage
-
-def subsidie_log(model):
-    x = model.schedule.step
-    subsidie = 3966.687 * math.exp(-0.076 * (x/12))
-    return subsidie
-
-def gemiddelde_belangstelling(model):
-    total_belangstelling = sum(a.belangstelling for a in model.schedule.agents)
-    mean_belangstelling = total_belangstelling / len(model.schedule.agents)
-    return mean_belangstelling
+from VermogenInkomen import genereer_random_vermogen
 
 def appoint_type(model, total_agents):
     max_innovator = int(total_agents * 0.025)
@@ -82,6 +42,54 @@ def appoint_type(model, total_agents):
 
 
     return agent_type
+
+def appoint_leeftijd_auto():
+    # cijfers van de kans zijn gehaald van https://www.cbs.nl/nl-nl/nieuws/2016/20/personenauto-s-steeds-ouder
+    # leeftijd is in maanden
+    leeftijd_auto = 0
+    kans = random.random()
+    if kans <= 0.156:
+        leeftijd_auto = random.randint(36)
+    elif kans > 0.156 <= 0.342:
+        leeftijd_auto = random.randint(36, 72)
+    elif kans > 0.342 <= 0.495:
+        leeftijd_auto = random.randint(72, 108)
+    elif kans > 0.495 <= 0.656:
+        leeftijd_auto = random.randint(108, 144)
+    elif kans > 0.656 <= 0.797:
+        leeftijd_auto = random.randint(144, 225)
+    elif kans > 0.797:
+        leeftijd_auto = random.randint(225, 360)
+    
+    return leeftijd_auto
+
+def appoint_vermogen_inkomen():
+    (a, b) = genereer_random_vermogen()
+    return (a,b)
+
+
+def percentage_evs(model):
+    total_cars = 0
+    total_evs = 0
+    for a in model.schedule.agents:
+        if a.bezit_auto == True:
+            total_cars +=1 
+            if a.bezit_EV == True:
+                total_evs += 1
+    percentage = total_evs / total_cars
+    return percentage
+
+def subsidie_log(model):
+    x = model.schedule.step
+    subsidie = 3966.687 * math.exp(-0.076 * (x/12))
+    return subsidie
+
+def gemiddelde_belangstelling(model):
+    total_belangstelling = sum(a.belangstelling for a in model.schedule.agents)
+    mean_belangstelling = total_belangstelling / len(model.schedule.agents)
+    return mean_belangstelling
+
+
 
 def count_type(model, Agent_Type):
 
@@ -194,9 +202,10 @@ class SubsidieModel(Model):
                 heeft_auto = False
                 if random.random() > 0.26:
                     heeft_auto = True
-                    leeftijd_auto = appoint_leeftijd_auto
+                    Leeftijd_auto = appoint_leeftijd_auto()
+                    (vermogen, inkomen) = appoint_vermogen_inkomen()
 
-                agent = AdoptionAgent((x,y), self, agent_type, heeft_auto, leeftijd_auto)
+                agent = AdoptionAgent((x,y), self, agent_type, heeft_auto, Leeftijd_auto, vermogen, inkomen)
                 self.grid.place_agent(agent, (x, y))
 
                 self.schedule.add(agent)
