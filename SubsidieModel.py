@@ -80,7 +80,7 @@ def percentage_evs(model):
 
 def subsidie_log(model):
     x = model.schedule.step
-    subsidie = 3966.687 * math.exp(-0.076 * (x/12))
+    subsidie = 3966.687 * math.exp(-0.076/12 * (x))
     return subsidie
 
 def gemiddelde_belangstelling(model):
