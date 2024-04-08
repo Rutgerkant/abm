@@ -79,8 +79,8 @@ def percentage_evs(model):
     return percentage
 
 def subsidie_log(model):
-    x = model.schedule.steps
-    subsidie = 3966.687 * math.exp(-0.076/12 * (x))
+    x = model.schedule.steps // 12
+    subsidie = 3966.687 * math.exp(-0.076 * (x))
     return subsidie
 
 def gemiddelde_belangstelling(model):
@@ -100,6 +100,10 @@ def count_type(model, Agent_Type):
 def calculate_belangstelling(model):
         subsidie = subsidie_log(model)
         subsidie = float(subsidie)
+        maand = model.schedule.steps
+        subsidiepot_vol = Tracking_Subs(subsidie, maand)
+        if subsidie == False:
+            subsidie = 0
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
                 Agent.belangstelling = 0.75  + (subsidie/1000)* 0.032

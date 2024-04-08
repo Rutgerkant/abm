@@ -17,7 +17,7 @@ def reset_subsidiepot():
     
     
 
-def Tracking_Subs(model, subsidie, maand):
+def Tracking_Subs(subsidie, maand):
     count_subs = 0
     jaar = maand // 12
 
