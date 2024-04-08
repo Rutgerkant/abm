@@ -11,6 +11,25 @@ import math
 
 from enum import Enum
 
+def appoint_leeftijd_auto(model):
+    # cijfers van de kans zijn gehaald van https://www.cbs.nl/nl-nl/nieuws/2016/20/personenauto-s-steeds-ouder
+    # leeftijd is in maanden
+    leeftijd_auto = 0
+    kans = random.random()
+    if kans <= 0.156:
+        leeftijd_auto = random.randint(36)
+    elif kans > 0.156 <= 0.342:
+        leeftijd_auto = random.randint(36, 72)
+    elif kans > 0.342 <= 0.495:
+        leeftijd_auto = random.randint(72, 108)
+    elif kans > 0.495 <= 0.656:
+        leeftijd_auto = random.randint(108, 144)
+    elif kans > 0.656 <= 0.797:
+        leeftijd_auto = random.randint(144, 225)
+    elif kans > 0.797:
+        leeftijd_auto = random.randint(225, 360)
+    
+    return leeftijd_auto
 
 def percentage_evs(model):
     total_cars = 0
@@ -86,136 +105,6 @@ def calculate_belangstelling(model):
                 Agent.belangstelling = 0.25 + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 2.3
             elif Agent.agent_type == TypeAdopter.LAGGARDS:
                 Agent.belangstelling = 0.20  + (Agent.leeftijd_auto) * (0.087/12) + (subsidie_log/1000)* 1.7
-
-
-# Definieer de inkomensintervallen en bijbehorende aantallen huishoudens
-inkomensintervallen = [
-    ("< -6", -6, -6),
-    ("-6 tot -4", -6, -4),
-    ("-4 tot -2", -4, -2),
-    ("-2 tot 0", -2, 0),
-    ("0 tot 2", 0, 2),
-    ("2 tot 4", 2, 4),
-    ("4 tot 6", 4, 6),
-    ("6 tot 8", 6, 8),
-    ("8 tot 10", 8, 10),
-    ("10 tot 12", 10, 12),
-    ("12 tot 14", 12, 14),
-    ("14 tot 16", 14, 16),
-    ("16 tot 18", 16, 18),
-    ("18 tot 20", 18, 20),
-    ("20 tot 22", 20, 22),
-    ("22 tot 24", 22, 24),
-    ("24 tot 26", 24, 26),
-    ("26 tot 28", 26, 28),
-    ("28 tot 30", 28, 30),
-    ("30 tot 32", 30, 32),
-    ("32 tot 34", 32, 34),
-    ("34 tot 36", 34, 36),
-    ("36 tot 38", 36, 38),
-    ("38 tot 40", 38, 40),
-    ("40 tot 42", 40, 42),
-    ("42 tot 44", 42, 44),
-    ("44 tot 46", 44, 46),
-    ("46 tot 48", 46, 48),
-    ("48 tot 50", 48, 50),
-    ("50 tot 52", 50, 52),
-    ("52 tot 54", 52, 54),
-    ("54 tot 56", 54, 56),
-    ("56 tot 58", 56, 58),
-    ("58 tot 60", 58, 60),
-    ("60 tot 62", 60, 62),
-    ("62 tot 64", 62, 64),
-    ("64 tot 66", 64, 66),
-    ("66 tot 68", 66, 68),
-    ("68 tot 70", 68, 70),
-    ("70 tot 72", 70, 72),
-    ("72 tot 74", 72, 74),
-    ("74 tot 76", 74, 76),
-    ("76 tot 78", 76, 78),
-    ("78 tot 80", 78, 80),
-    ("80 tot 82", 80, 82),
-    ("82 tot 84", 82, 84),
-    ("84 tot 86", 84, 86),
-    ("86 tot 88", 86, 88),
-    ("88 tot 90", 88, 90),
-    ("90 tot 92", 90, 92),
-    ("92 tot 94", 92, 94),
-    ("94 tot 96", 94, 96),
-    ("96 tot 98", 96, 98),
-    ("98 tot 100", 98, 100),
-    ("> 100", 100, 100)
-]
-
-aantallen = [
-    4, 1, 2, 21, 38, 46, 52, 52, 57, 62, 85, 158, 326, 443, 479, 520,
-    456, 434, 434, 429, 418, 404, 384, 354, 317, 280, 246, 215, 185, 158,
-    134, 113, 95, 80, 68, 57, 48, 41, 35, 30, 26, 22, 19, 17, 15, 13,
-    12, 11, 10, 9, 8, 7, 6, 6, 95
-]
-
-# Genereer een lijst van waarden en gewichten
-waarden = []
-gewichten = []
-
-for interval, aantal in zip(inkomensintervallen, aantallen):
-    label, min_, max_ = interval
-    waarden.append((min_ + max_) / 2) # Gebruik het middenpunt voor elke range
-    gewichten.append(aantal)
-
-# Gebruik de gewichten om een interval te kiezen en genereer een random waarde binnen dat interval
-def genereer_random_inkomen(waarden, gewichten):
-    gekozen_index = np.random.choice(len(waarden), p=gewichten/np.sum(gewichten))
-    min_, max_ = inkomensintervallen[gekozen_index][1], inkomensintervallen[gekozen_index][2]
-    if min_ == max_: # Voor de vaste waarden
-        return min_ * 1000  # Verander de waarde naar euro's
-    else:
-        return np.random.uniform(min_, max_) * 1000  # Verander de waarde naar euro's en genereer binnen het interval
-
-# Genereer een random inkomen
-random_inkomen = genereer_random_inkomen(waarden, gewichten)
-
-import numpy as np
-
-# Definieer de vermogensintervallen en bijbehorende aantallen huishoudens
-vermogensintervallen = [
-    ("nulde percentiel", -np.inf, -1.5),
-    ("eerste percentiel", -1.5, 2),
-    ("tweede percentiel", 2, 12.4),
-    ("derde percentiel", 12.4, 50.2),
-    ("vierde percentiel", 50.2, 135.1),
-    ("vijfde percentiel", 135.1, 218.6),
-    ("zesde percentiel", 218.6, 312.0),
-    ("zevende percentiel", 312.0, 434.80),
-    ("achtste percentiel", 434.80, 670.5),
-    ("negende percentiel", 670.5, np.inf)
-]
-
-aantallen_huishoudens = [10, 10, 10, 10, 10, 10, 10, 10, 10, 10]
-
-vermogenswaarden = []
-vermogensgewichten = []
-
-for interval in vermogensintervallen:
-    label, min_, max_ = interval
-    if np.isinf(min_) or np.isinf(max_):
-        vermogenswaarden.append(max_ if np.isinf(min_) else min_)  # Neem de enige beschikbare waarde als een van de grenzen oneindig is
-    else:
-        vermogenswaarden.append((min_ + max_) / 2)  # Gebruik het middenpunt voor elke range
-    vermogensgewichten.append(aantallen_huishoudens[vermogensintervallen.index(interval)])
-
-def genereer_random_vermogen(vermogenswaarden, vermogensgewichten):
-    gekozen_index = np.random.choice(len(vermogenswaarden), p=vermogensgewichten/np.sum(vermogensgewichten))
-    min_, max_ = vermogensintervallen[gekozen_index][1], vermogensintervallen[gekozen_index][2]
-    if np.isinf(min_) or np.isinf(max_):
-        return vermogenswaarden[gekozen_index] * 1000  # Verander de waarde naar euro's
-    else:
-        return np.random.uniform(min_, max_) * 1000  # Verander de waarde naar euro's en genereer binnen het interval
-
-# Genereer een random vermogen
-random_vermogen = genereer_random_vermogen(vermogenswaarden, vermogensgewichten)
-print(f"Random gegenereerd vermogen: €{random_vermogen:.2f}")
-
 
 def wil_auto_kopen(model):
     drempel_leeftijd_auto = 60
@@ -305,8 +194,9 @@ class SubsidieModel(Model):
                 heeft_auto = False
                 if random.random() > 0.26:
                     heeft_auto = True
+                    leeftijd_auto = appoint_leeftijd_auto
 
-                agent = AdoptionAgent((x,y), self, agent_type, heeft_auto)
+                agent = AdoptionAgent((x,y), self, agent_type, heeft_auto, leeftijd_auto)
                 self.grid.place_agent(agent, (x, y))
 
                 self.schedule.add(agent)
@@ -346,7 +236,7 @@ class SubsidieModel(Model):
 
 
 class AdoptionAgent(Agent):
-    def __init__(self, pos, model, agent_type, bezit_auto):
+    def __init__(self, pos, model, agent_type, bezit_auto, leeftijd_auto):
         super().__init__(pos, model)
         self.agent_type = agent_type
         self.bezit_auto = bezit_auto
@@ -354,8 +244,9 @@ class AdoptionAgent(Agent):
 
         self.vermogen = random.normalvariate(mu=50000, sigma=12500)
         self.belangstelling = 0.0
+        self.bezit_auto = bezit_auto
         if self.bezit_auto == True:
-            self.leeftijd_auto = random.randint(0, 120)
+            self.leeftijd_auto = leeftijd_auto
         else:
             self.leeftijd_auto = 0
         
