@@ -98,7 +98,8 @@ def count_type(model, Agent_Type):
         return count
 
 def calculate_belangstelling(model):
-        subsidie = float(subsidie_log)
+        subsidie = subsidie_log(model)
+        subsidie = float(subsidie)
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
                 Agent.belangstelling = 0.4  + (subsidie/1000)* 3.2
@@ -197,10 +198,13 @@ class SubsidieModel(Model):
             for y in range(self.height):
                 agent_type = appoint_type(self, self.total_agents)
                 heeft_auto = False
+                Leeftijd_auto = 0
                 if random.random() > 0.26:
                     heeft_auto = True
                     Leeftijd_auto = appoint_leeftijd_auto()
-                    (vermogen, inkomen) = appoint_vermogen_inkomen()
+                
+                
+                (vermogen, inkomen) = appoint_vermogen_inkomen()
 
                 agent = AdoptionAgent((x,y), self, agent_type, heeft_auto, Leeftijd_auto, vermogen, inkomen)
                 self.grid.place_agent(agent, (x, y))
