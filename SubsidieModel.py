@@ -79,7 +79,7 @@ def percentage_evs(model):
     return percentage
 
 def subsidie_log(model):
-    x = model.schedule.step
+    x = model.schedule.steps
     subsidie = 3966.687 * math.exp(-0.076/12 * (x))
     return subsidie
 
@@ -99,18 +99,20 @@ def count_type(model, Agent_Type):
 
 def calculate_belangstelling(model):
         subsidie = subsidie_log(model)
+        print(type(subsidie), subsidie)
         subsidie = float(subsidie)
+        print(type(subsidie))
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
-                Agent.belangstelling = 0.4  + (subsidie/1000)* 3.2
+                Agent.belangstelling = 0.4  + (subsidie/1000)* 0.032
             elif Agent.agent_type == TypeAdopter.EARLY_ADOPTER:
-                Agent.belangstelling = 0.35  * (0.087/12) + (subsidie/1000)* 3
+                Agent.belangstelling = 0.35  * (0.087/12) + (subsidie/1000)* 0.03
             elif Agent.agent_type == TypeAdopter.EARLY_MAJORITY:
-                Agent.belangstelling = 0.30  + (subsidie/1000)* 2.8
+                Agent.belangstelling = 0.30  + (subsidie/1000)* 0.028
             elif Agent.agent_type == TypeAdopter.LATE_MAJORITY:
-                Agent.belangstelling = 0.25 + (subsidie/1000)* 2.3
+                Agent.belangstelling = 0.25 + (subsidie/1000)* 0.023
             elif Agent.agent_type == TypeAdopter.LAGGARDS:
-                Agent.belangstelling = 0.20 + (subsidie/1000)* 1.7
+                Agent.belangstelling = 0.20 + (subsidie/1000)* 0.017
 
 def wil_auto_kopen(model):
     drempel_leeftijd_auto = 60
