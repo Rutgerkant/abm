@@ -47,8 +47,11 @@ def genereer_random_vermogen():
     min_inkomen, max_inkomen = vermogensintervallen[gekozen_index][3], vermogensintervallen[gekozen_index][4]   
     inkomen_agent = random.randint(min_inkomen, max_inkomen) * 1000
 
+    vermogen_auto = vermogen_agent * 0.125
+    inkomen_auto = inkomen_agent * 0.15 / 12
 
-    return (vermogen_agent, inkomen_agent)
+
+    return (vermogen_auto, inkomen_auto)
 
 
 random_vermogen, random_inkomen = genereer_random_vermogen()

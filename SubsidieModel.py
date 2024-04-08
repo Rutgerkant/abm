@@ -99,9 +99,7 @@ def count_type(model, Agent_Type):
 
 def calculate_belangstelling(model):
         subsidie = subsidie_log(model)
-        print(type(subsidie), subsidie)
         subsidie = float(subsidie)
-        print(type(subsidie))
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
                 Agent.belangstelling = 0.75  + (subsidie/1000)* 0.032
@@ -121,7 +119,7 @@ def wil_auto_kopen(model):
                 if random.random() < 0.296:
                     koopt_auto(model, a)        
             else:
-                kans = a.auto_leeftijd * 0.087
+                kans = a.leeftijd_auto * 0.087
                 if random.random() < kans:
                     koopt_auto(model, a)            
 
@@ -169,7 +167,7 @@ class TypeAdopter(Enum):
     LAGGARDS = 4
 
 class SubsidieModel(Model):
-    def __init__(self, width = 88, height =88 ):
+    def __init__(self, width = 50, height =50 ):
         super().__init__()
         self.width = width
         self.height = height
