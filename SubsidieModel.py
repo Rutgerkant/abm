@@ -104,45 +104,35 @@ def calculate_belangstelling(model):
         print(type(subsidie))
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
-                Agent.belangstelling = 0.4  + (subsidie/1000)* 0.032
+                Agent.belangstelling = 0.75  + (subsidie/1000)* 0.032
             elif Agent.agent_type == TypeAdopter.EARLY_ADOPTER:
-                Agent.belangstelling = 0.35  * (0.087/12) + (subsidie/1000)* 0.03
+                Agent.belangstelling = 0.716  * (0.087/12) + (subsidie/1000)* 0.03
             elif Agent.agent_type == TypeAdopter.EARLY_MAJORITY:
-                Agent.belangstelling = 0.30  + (subsidie/1000)* 0.028
+                Agent.belangstelling = 0.524  + (subsidie/1000)* 0.028
             elif Agent.agent_type == TypeAdopter.LATE_MAJORITY:
-                Agent.belangstelling = 0.25 + (subsidie/1000)* 0.023
+                Agent.belangstelling = 0.406 + (subsidie/1000)* 0.023
             elif Agent.agent_type == TypeAdopter.LAGGARDS:
-                Agent.belangstelling = 0.20 + (subsidie/1000)* 0.017
+                Agent.belangstelling = 0.374 + (subsidie/1000)* 0.017
 
 def wil_auto_kopen(model):
-    drempel_leeftijd_auto = 60
     for a in model.schedule.agents:
         if a.bezit_EV == False:
             if a.bezit_auto == False:
-                if random.random() < 0.2:
+                if random.random() < 0.296:
                     koopt_auto(model, a)        
             else:
-                if a.leeftijd_auto > drempel_leeftijd_auto:
-                    if random.random() < 0.80:
-                        koopt_auto(model, a)
-                
-                elif a.agent_type == TypeAdopter.INNOVATOR:
-                    if random.random() < 0.25 and a.vermogen > model.prijs_EV:
-                        koopt_EV(model, a)                    
+                kans = a.auto_leeftijd * 0.087
+                if random.random() < kans:
+                    koopt_auto(model, a)            
 
 def koopt_auto(model, a):
     if a.vermogen > model.prijs_EV or (a.vermogen + model.subsidie > model.prijs_EV):
-        if a.belangstelling > 0.7:
-            if random.random() > 0.2: 
+        interesse = a.belangstelling
+        kans = random.random()
+        if kans < interesse:
                 koopt_EV(model, a)
         
-        elif a.belangstelling > 0.6 and a.belangstelling <= 0.7:
-            if random.random() > 0.4: 
-                koopt_EV(model, a)
-            
-        if a.belangstelling > 0.5 and a.belangstelling <= 0.6:
-            if random.random() > 0.6: 
-                koopt_EV(model, a)
+
         
     elif a.vermogen > model.prijs_FBA:
             a.bezit_auto = True
@@ -179,7 +169,7 @@ class TypeAdopter(Enum):
     LAGGARDS = 4
 
 class SubsidieModel(Model):
-    def __init__(self, width = 50, height =50 ):
+    def __init__(self, width = 88, height =88 ):
         super().__init__()
         self.width = width
         self.height = height
