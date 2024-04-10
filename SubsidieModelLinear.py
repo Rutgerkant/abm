@@ -82,7 +82,7 @@ def percentage_evs(model):
         print(x)
     return percentage
 
-def subsidie_log(model):
+def subsidie_log2(model):
     x = model.schedule.steps // 12
     subsidie = 400 + 400 * x
     return subsidie
@@ -115,7 +115,7 @@ def count_type(model, Agent_Type):
         return count
 
 def calculate_belangstelling(model):
-        subsidie = subsidie_log(model)
+        subsidie = subsidie_log2(model)
         
         subsidie = float(subsidie)
         
@@ -243,6 +243,7 @@ class SubsidieModel2(Model):
 
     def step(self):
         self.schedule.step()
+        self.subsidie = subsidie_log2(self)
         for agent in self.schedule.agents:
             agent.leeftijd_auto += 1
             agent.vermogen += agent.inkomen

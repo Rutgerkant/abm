@@ -244,6 +244,8 @@ class SubsidieModel(Model):
             agent.leeftijd_auto += 1
             agent.vermogen += agent.inkomen
 
+    
+
         calculate_belangstelling(self)
         wil_auto_kopen(self)
 
