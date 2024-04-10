@@ -76,6 +76,9 @@ def percentage_evs(model):
             if a.bezit_EV == True:
                 total_evs += 1
     percentage = total_evs / total_cars
+    if percentage > 0.9:
+        x = model.schedule.steps
+        print(x)
     return percentage
 
 def subsidie_log(model):
@@ -112,14 +115,7 @@ def count_type(model, Agent_Type):
 
 def calculate_belangstelling(model):
         subsidie = subsidie_log(model)
-        print(subsidie)
-        print("b")
         subsidie = float(subsidie)
-        maand = model.schedule.steps
-        subsidiepot_vol = Tracking_Subs(subsidie, maand)
-        print(subsidiepot_vol)
-        if subsidiepot_vol == False:
-            subsidie = 0
         for Agent in model.schedule.agents:
             if Agent.agent_type == TypeAdopter.INNOVATOR:
                 Agent.belangstelling = 0.75  + (subsidie/1000)* 0.032
@@ -133,7 +129,7 @@ def calculate_belangstelling(model):
                 Agent.belangstelling = 0.374 + (subsidie/1000)* 0.017
 
 def wil_auto_kopen(model):
-    drempelwaarde = 72
+    drempelwaarde = 48
     for a in model.schedule.agents:
         if a.bezit_EV == False:
             if a.bezit_auto == True and a.leeftijd_auto > drempelwaarde:
@@ -243,7 +239,7 @@ class SubsidieModel(Model):
 
     def step(self):
         self.schedule.step()
-        print(self.subsidie)
+        self.subsidie = subsidie_log(self)
         for agent in self.schedule.agents:
             agent.leeftijd_auto += 1
             agent.vermogen += agent.inkomen
