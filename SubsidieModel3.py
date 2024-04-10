@@ -90,7 +90,7 @@ def subsidie_log3(model):
     
     # Beginwaarde en groeifactor gebruiken
     a = 500
-    b = 0.260
+    b = 0.130
     
     # Subsidie berekenen
     subsidie = a * math.exp(b * x)
