@@ -222,7 +222,8 @@ class SubsidieModel(Model):
              "Aantal gekochte EV": lambda model: model.gekochte_evs,
              "Aantal gekochte FBA": lambda model: model.gekochte_fba,
              "Percentage huishoudens in bezit auto": huishoudens_bezit_auto,
-             "Percerntage EV's van Auto's": percentage_evs
+             "Percerntage EV's van Auto's": percentage_evs,
+             "Hoeveelheid Subsidie": lambda model: model.subsidie
          }
         
         agent_metrics = {

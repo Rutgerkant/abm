@@ -240,7 +240,8 @@ class SubsidieModel3(Model):
              "Aantal gekochte EV": lambda model: model.gekochte_evs,
              "Aantal gekochte FBA": lambda model: model.gekochte_fba,
              "Percentage huishoudens in bezit auto": huishoudens_bezit_auto,
-             "Percerntage EV's van Auto's": percentage_evs
+             "Percerntage EV's van Auto's": percentage_evs,
+             "Hoeveelheid Subsidie": lambda model: model.subsidie
          }
         
         agent_metrics = {
@@ -258,6 +259,7 @@ class SubsidieModel3(Model):
     def step(self):
         self.schedule.step()
         self.subsidie = subsidie_log3(self)
+        print(self.subsidie)
         for agent in self.schedule.agents:
             agent.leeftijd_auto += 1
             agent.vermogen += agent.inkomen
