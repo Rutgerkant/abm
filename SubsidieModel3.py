@@ -82,9 +82,23 @@ def percentage_evs(model):
         print(x)
     return percentage
 
+
+
 def subsidie_log(model):
+    # x wordt berekend op basis van het aantal stappen gedeeld door 12
     x = model.schedule.steps // 12
-    subsidie = 400 + 400 * x
+    
+    # Beginwaarde en groeifactor gebruiken
+    a = 500
+    b = 0.260
+    
+    # Subsidie berekenen
+    subsidie = a * math.exp(b * x)
+    
+    # Subsidie limiteren tot 4000
+    if subsidie > 4000:
+        subsidie = 4000
+    
     return subsidie
 
 def gemiddelde_belangstelling(model):
