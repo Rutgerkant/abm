@@ -10,62 +10,7 @@ from aantalSubs import reset_subsidiepot, Tracking_Subs
 import math 
 from enum import Enum
 
-from VermogenInkomen import genereer_random_vermogen
-
-def appoint_type(model, total_agents):
-    max_innovator = int(total_agents * 0.025)
-    max_early_adopter = int(total_agents * 0.135)
-    max_early_majority = int(total_agents * 0.34)
-    max_late_majority = int(total_agents * 0.34)
-    max_laggard = int(total_agents * 0.16) 
-    
-    available_types = list(TypeAdopter)
-    
-    while True:
-        agent_type = random.choice(available_types)
-        amount_agents = count_type(model, agent_type)
-
-        if agent_type == TypeAdopter.INNOVATOR and amount_agents <= max_innovator:
-            break
-
-        elif agent_type == TypeAdopter.EARLY_ADOPTER and amount_agents <= max_early_adopter:
-            break
-            
-        elif agent_type == TypeAdopter.EARLY_MAJORITY and amount_agents <= max_early_majority:
-            break
-            
-        elif agent_type == TypeAdopter.LATE_MAJORITY and amount_agents <= max_late_majority:
-            break
-
-        elif agent_type == TypeAdopter.LAGGARDS and amount_agents <= max_laggard:
-            break
-
-
-    return agent_type
-
-def appoint_leeftijd_auto():
-    # cijfers van de kans zijn gehaald van https://www.cbs.nl/nl-nl/nieuws/2016/20/personenauto-s-steeds-ouder
-    # leeftijd is in maanden
-    leeftijd_auto = 0
-    kans = random.random()
-    if kans <= 0.156:
-        leeftijd_auto = random.randint(0, 36)
-    elif kans > 0.156 <= 0.342:
-        leeftijd_auto = random.randint(36, 72)
-    elif kans > 0.342 <= 0.495:
-        leeftijd_auto = random.randint(72, 108)
-    elif kans > 0.495 <= 0.656:
-        leeftijd_auto = random.randint(108, 144)
-    elif kans > 0.656 <= 0.797:
-        leeftijd_auto = random.randint(144, 225)
-    elif kans > 0.797:
-        leeftijd_auto = random.randint(225, 360)
-    
-    return leeftijd_auto
-
-def appoint_vermogen_inkomen():
-    (a, b) = genereer_random_vermogen()
-    return (a,b)
+from BaseModel import BaseModelSub, get_lst_agents, TypeAdopter
 
 def percentage_evs(model):
     total_cars = 0
@@ -76,9 +21,7 @@ def percentage_evs(model):
             if a.bezit_EV == True:
                 total_evs += 1
     percentage = total_evs / total_cars
-    if percentage > 0.9:
-        x = model.schedule.steps
-        print(x)
+    
     return percentage
 
 def subsidie_log(model):
@@ -173,18 +116,14 @@ def huishoudens_bezit_auto(model):
     percentage_bezit_auto = heeft_wel/model.total_agents
     return percentage_bezit_auto
 
-class TypeAdopter(Enum):
-    INNOVATOR = 0
-    EARLY_ADOPTER = 1
-    EARLY_MAJORITY = 2
-    LATE_MAJORITY = 3
-    LAGGARDS = 4
 
 class SubsidieModel(Model):
     def __init__(self, width = 50, height = 50):
         super().__init__()
         self.width = width
         self.height = height
+        self.lst_agents = get_lst_agents()
+        
 
         
         self.schedule = RandomActivation(self)
@@ -197,24 +136,15 @@ class SubsidieModel(Model):
 
         self.gekochte_evs = 0
         self.gekochte_fba = 0
-        reset_subsidiepot()
+        
 
-        for x in range(self.width):
-            for y in range(self.height):
-                agent_type = appoint_type(self, self.total_agents)
-                heeft_auto = False
-                Leeftijd_auto = 0
-                if random.random() > 0.26:
-                    heeft_auto = True
-                    Leeftijd_auto = appoint_leeftijd_auto()
-                
-                
-                (vermogen, inkomen) = appoint_vermogen_inkomen()
+        for i in self.lst_agents:
+            
+            agent = i
+            pos = agent.pos
+            self.grid.place_agent(agent, (pos))
 
-                agent = AdoptionAgent((x,y), self, agent_type, heeft_auto, Leeftijd_auto, vermogen, inkomen)
-                self.grid.place_agent(agent, (x, y))
-
-                self.schedule.add(agent)
+            self.schedule.add(agent)
 
 
         model_metrics = {
@@ -254,25 +184,7 @@ class SubsidieModel(Model):
         huishoudens_bezit_auto(self)
         percentage_evs(self)
         self.datacollector.collect(self)
-
-
-class AdoptionAgent(Agent):
-    def __init__(self, pos, model, agent_type, bezit_auto, leeftijd_auto, vermogen, inkomen):
-        super().__init__(pos, model)
-        self.agent_type = agent_type
-        self.bezit_auto = bezit_auto
-        self.bezit_EV = False
-
-        self.vermogen = vermogen
-        self.inkomen = inkomen
-        self.belangstelling = 0.0
-        self.bezit_auto = bezit_auto
-        if self.bezit_auto == True:
-            self.leeftijd_auto = leeftijd_auto
-        else:
-            self.leeftijd_auto = 0
         
 
 
 
-     

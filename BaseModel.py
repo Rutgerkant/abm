@@ -148,10 +148,3 @@ class AdoptionAgent(Agent):
         else:
             self.leeftijd_auto = 0
 
-model1 = BaseModelSub()
-
-
-for i in range(1):
-    model1.step()
-
-print("1 stap gelukt")

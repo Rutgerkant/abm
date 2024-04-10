@@ -139,7 +139,7 @@ class SubsidieModel4(Model):
 
         self.gekochte_evs = 0
         self.gekochte_fba = 0
-        reset_subsidiepot()
+        
 
         for i in self.lst_agents:
             
