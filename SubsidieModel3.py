@@ -198,7 +198,7 @@ class TypeAdopter(Enum):
     LATE_MAJORITY = 3
     LAGGARDS = 4
 
-class SubsidieModel2(Model):
+class SubsidieModel3(Model):
     def __init__(self, width = 50, height = 50):
         super().__init__()
         self.width = width
