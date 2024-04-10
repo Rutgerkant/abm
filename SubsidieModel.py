@@ -112,9 +112,12 @@ def count_type(model, Agent_Type):
 
 def calculate_belangstelling(model):
         subsidie = subsidie_log(model)
+        print(subsidie)
+        print("b")
         subsidie = float(subsidie)
         maand = model.schedule.steps
         subsidiepot_vol = Tracking_Subs(subsidie, maand)
+        print(subsidiepot_vol)
         if subsidiepot_vol == False:
             subsidie = 0
         for Agent in model.schedule.agents:
@@ -240,6 +243,7 @@ class SubsidieModel(Model):
 
     def step(self):
         self.schedule.step()
+        print(self.subsidie)
         for agent in self.schedule.agents:
             agent.leeftijd_auto += 1
             agent.vermogen += agent.inkomen
