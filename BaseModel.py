@@ -148,3 +148,5 @@ class AdoptionAgent(Agent):
         else:
             self.leeftijd_auto = 0
 
+
+    

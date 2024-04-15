@@ -21,7 +21,7 @@ def percentage_evs(model):
             if a.bezit_EV == True:
                 total_evs += 1
     percentage = total_evs / total_cars
-    
+    print(f"Total Evs, Total caars{total_evs, total_cars}")
     return percentage
 
 def subsidie_log(model):
@@ -84,13 +84,14 @@ def wil_auto_kopen(model):
                     count_auto += 1
                     koopt_auto(model, a)       
     
-    print(f"De agent wordt geplaatst op positie ({count}, {count_auto})")     
+    print(f"Aantal Autos en aantal EV ({count}, {count_auto})")     
 
 def koopt_auto(model, a):
     if a.vermogen > model.prijs_EV:
         interesse = a.belangstelling
         kans = random.random()
         if kans < interesse:
+                
                 koopt_EV(model, a)
 
     elif a.vermogen > model.prijs_FBA:
@@ -122,6 +123,7 @@ def huishoudens_bezit_auto(model):
             heeft_wel += 1
 
     percentage_bezit_auto = heeft_wel/model.total_agents
+    print(model.total_agents)
     return percentage_bezit_auto
 
 
@@ -176,6 +178,7 @@ class SubsidieModel(Model):
         
         self.running = True
         
+        print("Stap 10")
 
     def step(self):
         self.schedule.step()
@@ -192,6 +195,7 @@ class SubsidieModel(Model):
 
         huishoudens_bezit_auto(self)
         percentage_evs(self)
+        print(self.gekochte_evs)
         self.datacollector.collect(self)
         
 
