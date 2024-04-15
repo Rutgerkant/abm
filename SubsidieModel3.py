@@ -131,7 +131,7 @@ def huishoudens_bezit_auto(model):
 
 
 class SubsidieModel3(Model):
-    def __init__(self, width = 50, height = 50):
+    def __init__(self, width = 89, height = 89):
         super().__init__()
         self.width = width
         self.height = height
