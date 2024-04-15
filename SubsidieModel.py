@@ -72,13 +72,19 @@ def calculate_belangstelling(model):
                 Agent.belangstelling = 0.374 + (subsidie/1000)* 0.017
 
 def wil_auto_kopen(model):
+    count = 0
+    count_auto = 0
     drempelwaarde = 48
     for a in model.schedule.agents:
+        count += 1
         if a.bezit_EV == False:
             if a.bezit_auto == True and a.leeftijd_auto > drempelwaarde:
                 kans = a.leeftijd_auto // 12 * 0.087
                 if random.random() < kans:
-                    koopt_auto(model, a)            
+                    count_auto += 1
+                    koopt_auto(model, a)       
+    
+    print(f"De agent wordt geplaatst op positie ({count}, {count_auto})")     
 
 def koopt_auto(model, a):
     if a.vermogen > model.prijs_EV:
