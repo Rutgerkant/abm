@@ -155,6 +155,11 @@ class SubsidieModel(BaseModelSub):
     def step(self):
         self.schedule.step()
         self.subsidie = subsidie_log(self)
+        for agent in self.schedule.agents:
+            print(f"Vermogen, inkomen {agent.vermogen}, {agent.inkomen}")
+            agent.leeftijd_auto += 1
+            agent.vermogen += agent.inkomen
+
         
         calculate_belangstelling(self)
         wil_auto_kopen(self)
