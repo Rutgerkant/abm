@@ -90,10 +90,11 @@ class TypeAdopter(Enum):
     LAGGARDS = 4
 
 class BaseModelSub(Model):
-    def __init__(self, width = 89, height = 89):
+    def __init__(self, width = 5, height = 5, seed = None):
         super().__init__()
         self.width = width
         self.height = height
+        random.seed(seed)
 
         
         self.schedule = RandomActivation(self)
@@ -129,8 +130,11 @@ class BaseModelSub(Model):
     def step(self):
         self.schedule.step()
         for agent in self.schedule.agents:
+            print(f"Vermogen, inkomen {agent.vermogen}, {agent.inkomen}")
             agent.leeftijd_auto += 1
             agent.vermogen += agent.inkomen
+
+        
 
 class AdoptionAgent(Agent):
     def __init__(self, pos, model, agent_type, bezit_auto, leeftijd_auto, vermogen, inkomen):

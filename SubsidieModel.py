@@ -127,36 +127,10 @@ def huishoudens_bezit_auto(model):
     return percentage_bezit_auto
 
 
-class SubsidieModel(Model):
-    def __init__(self, width = 89, height = 89):
-        super().__init__()
-        self.width = width
-        self.height = height
-        self.lst_agents = get_lst_agents()
-        print(len(self.lst_agents))
-        
-
-        
-        self.schedule = RandomActivation(self)
-        self.grid = SingleGrid(width, height, torus=False)
-
-        self.total_agents = self.width * self.height
-        self.prijs_EV = 40000
-        self.prijs_FBA = 33000
-        self.subsidie = 0
-
-        self.gekochte_evs = 0
-        self.gekochte_fba = 0
-        
-
-        for i in self.lst_agents:
-            
-            agent = i
-            pos = agent.pos
-            self.grid.place_agent(agent, (pos))
-
-            self.schedule.add(agent)
-
+class SubsidieModel(BaseModelSub):
+    def __init__(self, width = 5, height = 5):
+        super().__init__(width, height)
+        print("Stap 10")
 
         model_metrics = {
              "Gemiddelde belangstelling": gemiddelde_belangstelling,
@@ -175,28 +149,22 @@ class SubsidieModel(Model):
         }
 
         self.datacollector = DataCollector(model_reporters=model_metrics,agent_reporters=agent_metrics)
-        
+
         self.running = True
         
-        print("Stap 10")
-
     def step(self):
         self.schedule.step()
         self.subsidie = subsidie_log(self)
-        for agent in self.schedule.agents:
-            agent.leeftijd_auto += 1
-            agent.vermogen += agent.inkomen
-
-    
-
+        
         calculate_belangstelling(self)
         wil_auto_kopen(self)
-
 
         huishoudens_bezit_auto(self)
         percentage_evs(self)
         print(self.gekochte_evs)
+        
         self.datacollector.collect(self)
+        
         
 
 
