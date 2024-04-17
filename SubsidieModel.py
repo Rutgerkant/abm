@@ -21,7 +21,7 @@ def percentage_evs(model):
             if a.bezit_EV == True:
                 total_evs += 1
     percentage = total_evs / total_cars
-    print(f"Total Evs, Total cars{total_evs, total_cars}")
+    
     return percentage
 
 def subsidie_log(model):
@@ -145,8 +145,9 @@ def huishoudens_bezit_auto(model):
 
 
 class SubsidieModel(BaseModelSub):
-    def __init__(self, width = 10, height = 10):
+    def __init__(self, prijs_ev, width = 10, height = 10):
         super().__init__(width, height)
+        self.prijs_EV = prijs_ev
         print("Stap 10")
 
         model_metrics = {
@@ -187,8 +188,7 @@ class SubsidieModel(BaseModelSub):
         percentage_evs(self)
         late_majority_ev(self)
         laggards_ev(self)
-        print(self.gekochte_evs)
-        print(f"Stap, totale hoeveelheid subsidie {self.schedule.steps}, {self.hoeveelheid_subsidie}")
+        
         self.datacollector.collect(self)
         
         

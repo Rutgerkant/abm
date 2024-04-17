@@ -142,8 +142,9 @@ def huishoudens_bezit_auto(model):
 
 
 class SubsidieModel2(BaseModelSub):
-    def __init__(self, width = 10, height = 10):
+    def __init__(self, prijs_ev, width = 10, height = 10):
         super().__init__(width, height)
+        self.prijs_EV = prijs_ev
         
 
         model_metrics = {
@@ -185,8 +186,6 @@ class SubsidieModel2(BaseModelSub):
         percentage_evs(self)
         late_majority_ev(self)
         laggards_ev(self)
-        print(self.gekochte_evs)
-        print(f"Stap, totale hoeveelheid subsidie {self.schedule.steps}, {self.hoeveelheid_subsidie}")
         self.datacollector.collect(self)
 
 
