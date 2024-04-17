@@ -58,6 +58,16 @@ def gemiddelde_leeftijd_auto(model):
     gem = som /aantal
     return gem 
 
+def late_majority_ev(model):
+    count_late_majority = 0
+    late_majority_met_EV = 0
+    for a in model.schedule.agents:
+        if a.agent_type == TypeAdopter.LATE_MAJORITY:
+            count_late_majority += 1
+            if a.bezit_EV == True:
+                late_majority_met_EV += 1
+    percentage = late_majority_met_EV / count_late_majority
+    return percentage
 
 
 def count_type(model, Agent_Type):
@@ -111,6 +121,7 @@ def koopt_EV(model, agent):
         agent.bezit_auto = True
         agent.bezit_EV = True
         model.gekochte_evs += 1
+        model.hoeveelheid_subsidie += model.subsidie
 
 def aantal_evs(model):
     count = 0
@@ -131,7 +142,7 @@ def huishoudens_bezit_auto(model):
 
 
 class SubsidieModel3(BaseModelSub):
-    def __init__(self, width = 5, height = 5):
+    def __init__(self, width = 89, height = 89):
         super().__init__(width, height)
 
 
@@ -141,14 +152,16 @@ class SubsidieModel3(BaseModelSub):
              "Aantal gekochte FBA": lambda model: model.gekochte_fba,
              "Percentage huishoudens in bezit auto": huishoudens_bezit_auto,
              "Percerntage EV's van Auto's": percentage_evs,
-             "Hoeveelheid Subsidie": lambda model: model.subsidie
+             "Hoeveelheid Subsidie": lambda model: model.subsidie,
+             "Percentage late majority met EV": late_majority_ev
          }
         
         agent_metrics = {
             "Type Agent": lambda agent: agent.agent_type.name,
             "Belangstelling": lambda agent: agent.belangstelling,
             "leeftijd auto": lambda agent: agent.leeftijd_auto,
-            "Vermogen Agent": lambda agent:agent.vermogen
+            "Vermogen Agent": lambda agent:agent.vermogen,
+            "agent heeft ev": lambda agent:agent.bezit_EV
         }
 
         self.datacollector = DataCollector(model_reporters=model_metrics,agent_reporters=agent_metrics)
@@ -160,7 +173,7 @@ class SubsidieModel3(BaseModelSub):
         self.subsidie = subsidie_log3(self)
 
         for agent in self.schedule.agents:
-            print(f"Vermogen, inkomen {agent.vermogen}, {agent.inkomen}")
+            
             agent.leeftijd_auto += 1
             agent.vermogen += agent.inkomen
 
@@ -169,7 +182,9 @@ class SubsidieModel3(BaseModelSub):
 
         huishoudens_bezit_auto(self)
         percentage_evs(self)
-
+        late_majority_ev(self)
+        print(self.gekochte_evs)
+        print(f"Stap, totale hoeveelheid subsidie {self.schedule.steps}, {self.hoeveelheid_subsidie}")
         self.datacollector.collect(self)
         
         

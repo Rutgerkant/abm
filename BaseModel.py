@@ -90,11 +90,11 @@ class TypeAdopter(Enum):
     LAGGARDS = 4
 
 class BaseModelSub(Model):
-    def __init__(self, width = 5, height = 5, seed = None):
+    def __init__(self, width = 89, height = 89):
         super().__init__()
         self.width = width
         self.height = height
-        random.seed(seed)
+        
 
         
         self.schedule = RandomActivation(self)
@@ -104,6 +104,7 @@ class BaseModelSub(Model):
         self.prijs_EV = 40000
         self.prijs_FBA = 33000
         self.subsidie = 0
+        self.hoeveelheid_subsidie = 0
 
         self.gekochte_evs = 0
         self.gekochte_fba = 0
