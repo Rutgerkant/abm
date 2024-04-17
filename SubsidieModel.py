@@ -94,11 +94,11 @@ def calculate_belangstelling(model):
 def wil_auto_kopen(model):
     count = 0
     count_auto = 0
-    drempelwaarde = 48
+    
     for a in model.schedule.agents:
         count += 1
         if a.bezit_EV == False:
-            if a.bezit_auto == True and a.leeftijd_auto > drempelwaarde:
+            if a.bezit_auto == True and a.leeftijd_auto > model.drempelwaarde:
                 kans = a.leeftijd_auto // 12 * 0.087
                 if random.random() < kans:
                     count_auto += 1
@@ -145,10 +145,10 @@ def huishoudens_bezit_auto(model):
 
 
 class SubsidieModel(BaseModelSub):
-    def __init__(self, prijs_ev, width = 10, height = 10):
+    def __init__(self, a, width = 28, height = 28):
         super().__init__(width, height)
-        self.prijs_EV = prijs_ev
-        print("Stap 10")
+        self.prijs_FBA = a
+        print("STAP1")
 
         model_metrics = {
              "Gemiddelde belangstelling": gemiddelde_belangstelling,
@@ -156,7 +156,8 @@ class SubsidieModel(BaseModelSub):
              "Aantal gekochte FBA": lambda model: model.gekochte_fba,
              "Percentage huishoudens in bezit auto": huishoudens_bezit_auto,
              "Percerntage EV's van Auto's": percentage_evs,
-             "Hoeveelheid Subsidie": lambda model: model.hoeveelheid_subsidie,
+             "Hoeveelheid totale Subsidie": lambda model: model.hoeveelheid_subsidie,
+             "Hoeveelheid Subsidie": lambda model: model.subsidie,
              "Percentage late majority met EV": late_majority_ev,
              "Percentage laggards met EV": laggards_ev
          }

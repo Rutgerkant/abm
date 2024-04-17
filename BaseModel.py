@@ -90,7 +90,7 @@ class TypeAdopter(Enum):
     LAGGARDS = 4
 
 class BaseModelSub(Model):
-    def __init__(self, width = 10, height = 10):
+    def __init__(self, width = 28, height = 28):
         super().__init__()
         self.width = width
         self.height = height
@@ -105,6 +105,7 @@ class BaseModelSub(Model):
         self.prijs_FBA = 33000
         self.subsidie = 0
         self.hoeveelheid_subsidie = 0
+        self.drempelwaarde = 48
 
         self.gekochte_evs = 0
         self.gekochte_fba = 0
@@ -115,7 +116,7 @@ class BaseModelSub(Model):
                 agent_type = appoint_type(self, self.total_agents)
                 heeft_auto = False
                 Leeftijd_auto = 0
-                if random.random() > 0.26:
+                if random.random() < 0.74:
                     heeft_auto = True
                     Leeftijd_auto = appoint_leeftijd_auto()
                 

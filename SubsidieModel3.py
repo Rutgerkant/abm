@@ -29,7 +29,7 @@ def subsidie_log3(model):
     x = model.schedule.steps // 12
     
     # Beginwaarde en groeifactor gebruiken
-    a = 500
+    a = 1000
     b = 0.130
     
     # Subsidie berekenen
@@ -105,10 +105,9 @@ def calculate_belangstelling(model):
                 Agent.belangstelling = 0.374 + (subsidie/1000)* 0.017
 
 def wil_auto_kopen(model):
-    drempelwaarde = 48
     for a in model.schedule.agents:
         if a.bezit_EV == False:
-            if a.bezit_auto == True and a.leeftijd_auto > drempelwaarde:
+            if a.bezit_auto == True and a.leeftijd_auto > model.drempelwaarde:
                 kans = a.leeftijd_auto // 12 * 0.087
                 if random.random() < kans:
                     koopt_auto(model, a)            
@@ -152,9 +151,9 @@ def huishoudens_bezit_auto(model):
 
 
 class SubsidieModel3(BaseModelSub):
-    def __init__(self, prijs_ev, width = 10, height = 10):
+    def __init__(self, width = 28, height = 28):
         super().__init__(width, height)
-        self.prijs_EV = prijs_ev
+        
 
 
         model_metrics = {
@@ -163,7 +162,8 @@ class SubsidieModel3(BaseModelSub):
             "Aantal gekochte FBA": lambda model: model.gekochte_fba,
             "Percentage huishoudens in bezit auto": huishoudens_bezit_auto,
             "Percerntage EV's van Auto's": percentage_evs,
-            "Hoeveelheid Subsidie": lambda model: model.hoeveelheid_subsidie,
+            "Hoeveelheid totale Subsidie": lambda model: model.hoeveelheid_subsidie,
+            "Hoeveelheid Subsidie": lambda model: model.subsidie,
             "Percentage late majority met EV": late_majority_ev,
             "Percentage laggards met EV": laggards_ev
         }
