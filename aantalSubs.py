@@ -1,3 +1,7 @@
+# deze file wordt niet gebruikt in het model. Dit was niet helemaal uitgewerkt
+# we hebben een andere manier gebruikt om inzicht te krijgen over de kosten van subsidies
+
+
 subsidiepot = {}
 
 def reset_subsidiepot():

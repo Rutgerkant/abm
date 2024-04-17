@@ -90,7 +90,7 @@ class TypeAdopter(Enum):
     LAGGARDS = 4
 
 class BaseModelSub(Model):
-    def __init__(self, width = 89, height = 89):
+    def __init__(self, width = 10, height = 10):
         super().__init__()
         self.width = width
         self.height = height

@@ -56,6 +56,17 @@ def late_majority_ev(model):
     percentage = late_majority_met_EV / count_late_majority
     return percentage
 
+def laggards_ev(model):
+    count_laggards = 0
+    laggards_met_EV = 0
+    for a in model.schedule.agents:
+        if a.agent_type == TypeAdopter.LAGGARDS:
+            count_laggards += 1
+            if a.bezit_EV == True:
+                laggards_met_EV += 1
+    percentage = laggards_met_EV / count_laggards
+    return percentage
+
 def count_type(model, Agent_Type):
 
         count = 0 
@@ -134,7 +145,7 @@ def huishoudens_bezit_auto(model):
 
 
 class SubsidieModel(BaseModelSub):
-    def __init__(self, width = 89, height = 89):
+    def __init__(self, width = 10, height = 10):
         super().__init__(width, height)
         print("Stap 10")
 
@@ -144,8 +155,9 @@ class SubsidieModel(BaseModelSub):
              "Aantal gekochte FBA": lambda model: model.gekochte_fba,
              "Percentage huishoudens in bezit auto": huishoudens_bezit_auto,
              "Percerntage EV's van Auto's": percentage_evs,
-             "Hoeveelheid Subsidie": lambda model: model.subsidie,
-             "Percentage late majority met EV": late_majority_ev
+             "Hoeveelheid Subsidie": lambda model: model.hoeveelheid_subsidie,
+             "Percentage late majority met EV": late_majority_ev,
+             "Percentage laggards met EV": laggards_ev
          }
         
         agent_metrics = {
@@ -174,6 +186,7 @@ class SubsidieModel(BaseModelSub):
         huishoudens_bezit_auto(self)
         percentage_evs(self)
         late_majority_ev(self)
+        laggards_ev(self)
         print(self.gekochte_evs)
         print(f"Stap, totale hoeveelheid subsidie {self.schedule.steps}, {self.hoeveelheid_subsidie}")
         self.datacollector.collect(self)
