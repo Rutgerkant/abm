@@ -149,6 +149,7 @@ class SubsidieModel2(BaseModelSub):
         self.prijs_EV = a
         self.prijs_FBA = b
         
+        
 
         model_metrics = {
              "Gemiddelde belangstelling": gemiddelde_belangstelling,
