@@ -78,9 +78,10 @@ def laggards_ev(model):
             if a.bezit_auto == True:
                 count_laggards += 1
                 if a.bezit_EV == True:
-                    aggards_met_EV += 1
+                    laggards_met_EV += 1
     percentage = laggards_met_EV / count_laggards
     return percentage
+
 
 def count_type(model, Agent_Type):
 
