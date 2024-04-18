@@ -145,9 +145,11 @@ def huishoudens_bezit_auto(model):
 
 
 class SubsidieModel(BaseModelSub):
-    def __init__(self, a, width = 28, height = 28):
+    def __init__(self, a, b, width = 28, height = 28):
         super().__init__(width, height)
-        self.prijs_FBA = a
+        self.prijs_EV = a
+        self.prijs_FBA = b
+        
         print("STAP1")
 
         model_metrics = {
