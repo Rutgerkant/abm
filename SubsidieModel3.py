@@ -63,20 +63,22 @@ def late_majority_ev(model):
     late_majority_met_EV = 0
     for a in model.schedule.agents:
         if a.agent_type == TypeAdopter.LATE_MAJORITY:
-            count_late_majority += 1
-            if a.bezit_EV == True:
-                late_majority_met_EV += 1
+            if a.bezit_auto == True:
+                count_late_majority += 1
+                if a.bezit_EV == True:
+                    late_majority_met_EV += 1
     percentage = late_majority_met_EV / count_late_majority
     return percentage
 
-def laggards_ev(model):
+ddef laggards_ev(model):
     count_laggards = 0
     laggards_met_EV = 0
     for a in model.schedule.agents:
         if a.agent_type == TypeAdopter.LAGGARDS:
-            count_laggards += 1
-            if a.bezit_EV == True:
-                laggards_met_EV += 1
+            if a.bezit_auto == True:
+                count_laggards += 1
+                if a.bezit_EV == True:
+                    aggards_met_EV += 1
     percentage = laggards_met_EV / count_laggards
     return percentage
 
