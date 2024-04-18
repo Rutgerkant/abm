@@ -70,7 +70,7 @@ def late_majority_ev(model):
     percentage = late_majority_met_EV / count_late_majority
     return percentage
 
-ddef laggards_ev(model):
+def laggards_ev(model):
     count_laggards = 0
     laggards_met_EV = 0
     for a in model.schedule.agents:
