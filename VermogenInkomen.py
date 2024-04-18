@@ -20,7 +20,7 @@ vermogensintervallen = [
     ("negende Deciel", 670.5, np.inf, 89, 150)
 ]
 
-aantallen_huishoudens = [793, 793, 793, 793, 793, 793, 793, 793, 793, 793]
+aantallen_huishoudens = [79, 79, 79, 79, 79, 79, 79, 79, 79, 79]
 
 
 
