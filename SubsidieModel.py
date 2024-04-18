@@ -149,8 +149,6 @@ class SubsidieModel(BaseModelSub):
         super().__init__(width, height)
         self.prijs_EV = a
         self.prijs_FBA = b
-        
-        print("STAP1")
 
         model_metrics = {
              "Gemiddelde belangstelling": gemiddelde_belangstelling,
