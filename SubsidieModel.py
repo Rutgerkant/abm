@@ -157,7 +157,7 @@ class SubsidieModel(BaseModelSub):
              "Aantal gekochte EV": lambda model: model.gekochte_evs,
              "Aantal gekochte FBA": lambda model: model.gekochte_fba,
              "Percentage huishoudens in bezit auto": huishoudens_bezit_auto,
-             "Percerntage EV's van Auto's": percentage_evs,
+             "Percentage EV's van Auto's": percentage_evs,
              "Hoeveelheid totale Subsidie": lambda model: model.hoeveelheid_subsidie,
              "Hoeveelheid Subsidie": lambda model: model.subsidie,
              "Percentage late majority met EV": late_majority_ev,
